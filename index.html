@@ -244,14 +244,14 @@ tr.expandable:hover td{background:var(--surface2)}
 // =============================================
 // CONFIGURAÇÃO — cole a URL do Apps Script aqui
 // =============================================
-const APPS_SCRIPT_URL = https://script.google.com/macros/s/AKfycbzPc0AJVKBsYeUfrfQfs8fdlTSTvAnPB11QWJpnLjhCvF1dpLUY_bqt_JjB6Mz2_RbpQw/exec;
+const APPS_SCRIPT_URL = https://script.google.com/macros/s/AKfycbyjGiGPcOsK2oyi4gnsUTFHIPZBfxvVDix_6Q0ofjcV/dev;
 // =============================================
 
 const ACTIVITIES=["Entrega Diagnóstico de Rubricas","Treinamento e Liberação Módulo Rubricas","Entrega de Rubricas","Treinamento e Liberação Módulos Certidões, Créditos e e-CAC","Conformidade de Contribuintes Individuais","Horários e Jornadas","Revisão de Atividades x CBOs","Liberação Módulo SST"];
 const ACT_STATUS=["A iniciar","Em andamento","Atrasado","Cancelado","Concluído"];
 let currentUser=null,editingId=null,tempContacts=[],projects=[];
 let chartFases=null,chartStatus=null;
-const DEMO_MODE = APPS_SCRIPT_URL==='COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+const DEMO_MODE = APPS_SCRIPT_URL=== https://script.google.com/macros/s/AKfycbyjGiGPcOsK2oyi4gnsUTFHIPZBfxvVDix_6Q0ofjcV/dev;
 
 async function apiCall(action,data={}){
   if(action==='getProjects'){
