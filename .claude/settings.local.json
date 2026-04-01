@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --version)",
+      "Bash(npx serve:*)",
+      "Bash(npx http-server:*)",
+      "Bash(npx live-server:*)"
+    ]
+  }
+}
