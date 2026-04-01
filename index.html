@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProjectView — Painel de Projetos</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7F8FA;--surface:#FFFFFF;--surface2:#F1F3F7;--border:#E2E5EC;--border2:#C8CDD8;
+  --text:#1A1D24;--text2:#5A6070;--text3:#9099AC;
+  --blue:#185FA5;--blue-light:#E6F1FB;--blue-dark:#0C447C;
+  --green:#1D9E75;--green-light:#E1F5EE;
+  --amber:#BA7517;--amber-light:#FAEEDA;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --purple:#534AB7;--purple-light:#EEEDFE;
+  --teal:#0F6E56;--teal-light:#E1F5EE;
+  --coral:#993C1D;--coral-light:#FAECE7;
+  --gray:#5F5E5A;--gray-light:#F1EFE8;
+  --radius:10px;--radius-sm:6px;--radius-lg:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.05);
+}
+body{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);line-height:1.5}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo{font-size:17px;font-weight:600;letter-spacing:-.3px}.logo span{color:var(--blue)}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.badge-role{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);font-weight:500}
+.sync-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.sync-ok{background:var(--green-light);color:var(--teal)}
+.sync-loading{background:var(--amber-light);color:var(--amber)}
+.sync-error{background:var(--red-light);color:var(--red)}
+.nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:0;padding:0 28px}
+.nav-btn{padding:11px 18px;font-size:13px;font-family:'DM Sans',sans-serif;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);transition:all .15s;font-weight:500}
+.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.nav-btn:hover:not(.active){color:var(--text)}
+.main{padding:28px;flex:1;max-width:1200px;width:100%;margin:0 auto}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;width:380px;box-shadow:var(--shadow-md)}
+.login-logo{font-size:22px;font-weight:600;margin-bottom:4px}.login-logo span{color:var(--blue)}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+.login-form{display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:5px}
+label{font-size:12px;color:var(--text2);font-weight:500}
+input,select,textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+textarea{resize:vertical;min-height:80px}
+.login-error{font-size:12px;color:var(--red);display:none}
+.login-hint{font-size:11px;color:var(--text3);text-align:center;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)}
+.btn{padding:8px 18px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s}
+.btn-primary{background:var(--blue);color:#fff;border:none}
+.btn-primary:hover{background:var(--blue-dark)}
+.btn-primary:disabled{background:var(--border2);cursor:default}
+.btn-secondary{background:none;border:1px solid var(--border2);color:var(--text)}
+.btn-secondary:hover{background:var(--surface2)}
+.btn-danger{background:none;border:1px solid #E24B4A;color:#E24B4A;font-size:12px;padding:5px 12px}
+.btn-sm{padding:5px 12px;font-size:12px}
+.logout-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 12px;font-size:12px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif}
+.logout-btn:hover{background:var(--surface2)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card-title{font-size:14px;font-weight:600;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow)}
+.metric-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.metric-value{font-size:26px;font-weight:600;line-height:1.1;color:var(--text)}
+.metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group.full{grid-column:1/-1}
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:22px}
+.tab-btn{padding:10px 18px;font-size:13px;font-family:'DM Sans',sans-serif;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);font-weight:500}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-content{display:none}.tab-content.active{display:block}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-size:11px;font-weight:600;color:var(--text3);text-align:left;padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr.expandable{cursor:pointer}
+tr.expandable:hover td{background:var(--surface2)}
+.client-name-link{color:var(--blue);font-weight:500;display:flex;align-items:center;gap:6px}
+.arrow{display:inline-block;transition:transform .2s;font-size:10px;color:var(--text3)}
+.arrow.open{transform:rotate(90deg)}
+.detail-row{display:none}.detail-row.open{display:table-row}
+.detail-cell{background:var(--surface2)!important;padding:20px 24px!important}
+.detail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px}
+.detail-item{display:flex;flex-direction:column;gap:3px}
+.di-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.4px}
+.di-value{font-size:13px;font-weight:500}
+.section-mini{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.pill-blue{background:var(--blue-light);color:var(--blue-dark)}
+.pill-green{background:var(--green-light);color:var(--teal)}
+.pill-amber{background:var(--amber-light);color:var(--amber)}
+.pill-red{background:var(--red-light);color:var(--red)}
+.pill-gray{background:var(--gray-light);color:var(--gray)}
+.pill-purple{background:var(--purple-light);color:var(--purple)}
+.pill-teal{background:var(--teal-light);color:var(--teal)}
+.pill-coral{background:var(--coral-light);color:var(--coral)}
+.progress-wrap{display:flex;align-items:center;gap:8px}
+.progress-bar-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;min-width:60px}
+.progress-bar-fill{height:100%;background:var(--blue);border-radius:3px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap}
+.filter-row select{width:auto;min-width:140px}
+.activity-header,.activity-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.activity-row:last-child{border-bottom:none}
+.activity-name{font-size:12px}
+.contact-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.contact-item:last-child{border-bottom:none}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue);flex-shrink:0}
+.contact-name{font-size:13px;font-weight:500}.contact-role{font-size:11px;color:var(--text3)}
+.empty-state{text-align:center;padding:48px;color:var(--text3);font-size:13px}
+.client-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:8px}
+.client-item-name{font-weight:500}
+.remove-btn{background:none;border:none;cursor:pointer;color:#E24B4A;font-size:18px;line-height:1}
+.form-msg{font-size:13px;margin-top:10px;display:none}
+.acts-table{width:100%;font-size:12px;border-collapse:collapse;margin-top:8px}
+.acts-table th{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--surface)}
+.acts-table td{padding:7px 10px;border-bottom:1px solid var(--border)}
+.acts-table tr:last-child td{border-bottom:none}
+@media(max-width:768px){.metrics-grid{grid-template-columns:1fr 1fr}.charts-row{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.main{padding:16px}}
+</style>
+</head>
+<body>
+
+<div id="login-screen" class="login-wrap">
+  <div class="login-card">
+    <div class="login-logo">Project<span>View</span></div>
+    <div class="login-sub">Painel executivo de projetos em implantação</div>
+    <div class="login-form">
+      <div class="form-group"><label>Usuário</label><input type="text" id="login-user" placeholder="Digite seu usuário" autocomplete="username"></div>
+      <div class="form-group"><label>Senha</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div id="login-error" class="login-error">Usuário ou senha incorretos.</div>
+      <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
+      <div class="login-hint">admin / admin123 &nbsp;·&nbsp; visitante / visita123</div>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen" class="app" style="display:none">
+  <div class="topbar">
+    <div class="logo">Project<span>View</span></div>
+    <div class="topbar-right">
+      <span id="sync-status" class="sync-status sync-loading">Conectando...</span>
+      <span id="role-badge" class="badge-role"></span>
+      <button class="logout-btn" onclick="doLogout()">Sair</button>
+    </div>
+  </div>
+  <div class="nav">
+    <button class="nav-btn active" onclick="showPage('dash',this)">Dashboard</button>
+    <button class="nav-btn" id="nav-cadastro" onclick="showPage('cadastro',this)">Cadastro</button>
+  </div>
+  <div class="main">
+    <div class="page active" id="page-dash">
+      <div class="metrics-grid" id="metrics-container"></div>
+      <div class="charts-row">
+        <div class="card" style="padding:18px">
+          <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Projetos por fase</div>
+          <div style="position:relative;height:200px"><canvas id="chart-fases"></canvas></div>
+        </div>
+        <div class="card" style="padding:18px">
+          <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Projetos por status</div>
+          <div style="position:relative;height:200px"><canvas id="chart-status"></canvas></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">
+          <span>Lista de clientes</span>
+          <div class="filter-row">
+            <select id="filter-tipo" onchange="renderTable()"><option value="">Todos os tipos</option><option>eGov</option><option>Privado</option></select>
+            <select id="filter-status" onchange="renderTable()"><option value="">Todos os status</option><option>On Track</option><option>Delayed</option><option>At Risk</option><option>On Hold</option></select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th style="width:32px"></th><th>Cliente</th><th>Serviço</th><th>Status</th><th>Conclusão</th><th>Contrato</th><th>Kickoff</th></tr></thead>
+          <tbody id="table-body"></tbody></table>
+          <div id="table-empty" class="empty-state" style="display:none">Nenhum projeto cadastrado ainda.</div>
+        </div>
+      </div>
+    </div>
+    <div class="page" id="page-cadastro">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab-clientes',this)">Projetos cadastrados</button>
+        <button class="tab-btn" id="tab-btn-form" onclick="showTab('tab-form',this)">Novo projeto</button>
+      </div>
+      <div class="tab-content active" id="tab-clientes"><div id="cadastro-list-wrap"></div></div>
+      <div class="tab-content" id="tab-form">
+        <div class="card">
+          <div class="card-title">Dados do cliente e contrato</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Nome do cliente *</label><input type="text" id="f-nome" placeholder="Ex: Prefeitura de Florianópolis"></div>
+            <div class="form-group"><label>Tipo de cliente</label><select id="f-tipo"><option>eGov</option><option>Privado</option></select></div>
+            <div class="form-group"><label>Tipo de serviço</label><select id="f-servico"><option>Software SAAS</option><option>RTI</option><option>Consultoria</option></select></div>
+            <div class="form-group"><label>Fase do projeto</label><select id="f-fase"><option>Não iniciado</option><option>Em proposta</option><option>Em andamento</option><option>Impedimento</option><option>Em operação</option><option>Concluído</option><option>Cancelado</option></select></div>
+            <div class="form-group"><label>Status do projeto</label><select id="f-status"><option>On Track</option><option>Delayed</option><option>At Risk</option><option>On Hold</option></select></div>
+            <div class="form-group"><label>Prioridade</label><select id="f-prio"><option>Alta</option><option>Média</option><option>Baixa</option></select></div>
+            <div class="form-group"><label>Contrato ativo?</label><select id="f-contrato"><option>Sim</option><option>Não</option></select></div>
+            <div class="form-group"><label>% de conclusão</label><input type="number" id="f-perc" min="0" max="100" placeholder="0 a 100"></div>
+            <div class="form-group"><label>Duração do contrato</label><input type="text" id="f-duracao" placeholder="Ex: 24 meses"></div>
+            <div class="form-group"><label>Data do contrato</label><input type="date" id="f-dtcontrato"></div>
+            <div class="form-group"><label>Data do kickoff</label><input type="date" id="f-dtkickoff"></div>
+            <div class="form-group"><label>Data liberação outorga</label><input type="date" id="f-dtoutorga"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Atividades do projeto</div>
+          <div class="activity-header" style="padding-bottom:8px">
+            <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">Atividade</div>
+            <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">Data inicial</div>
+            <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">Data final</div>
+            <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase">Status</div>
+          </div>
+          <div id="activities-form"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Informações adicionais</div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="form-group"><label>Consultoria realizada</label><textarea id="f-consultoria" placeholder="Descreva os tipos de consultorias realizadas..."></textarea></div>
+            <div class="form-group"><label>Observações gerais</label><textarea id="f-obs" placeholder="Informações gerais sobre o projeto..."></textarea></div>
+            <div class="form-group">
+              <label>Principais contatos / stakeholders</label>
+              <div style="display:flex;gap:8px;margin-bottom:10px">
+                <input type="text" id="f-cont-nome" placeholder="Nome" style="flex:1">
+                <input type="text" id="f-cont-cargo" placeholder="Cargo / papel" style="flex:1">
+                <button class="btn btn-secondary btn-sm" onclick="addContact()">+ Adicionar</button>
+              </div>
+              <div id="contacts-preview"></div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="btn btn-primary" id="btn-save" onclick="saveProject()">Salvar projeto</button>
+          <button class="btn btn-secondary" onclick="clearForm()">Limpar</button>
+        </div>
+        <div id="form-msg" class="form-msg"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// CONFIGURAÇÃO — cole a URL do Apps Script aqui
+// =============================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPc0AJVKBsYeUfrfQfs8fdlTSTvAnPB11QWJpnLjhCvF1dpLUY_bqt_JjB6Mz2_RbpQw/exec';
+// =============================================
+
+const ACTIVITIES=["Entrega Diagnóstico de Rubricas","Treinamento e Liberação Módulo Rubricas","Entrega de Rubricas","Treinamento e Liberação Módulos Certidões, Créditos e e-CAC","Conformidade de Contribuintes Individuais","Horários e Jornadas","Revisão de Atividades x CBOs","Liberação Módulo SST"];
+const ACT_STATUS=["A iniciar","Em andamento","Atrasado","Cancelado","Concluído"];
+let currentUser=null,editingId=null,tempContacts=[],projects=[];
+let chartFases=null,chartStatus=null;
+const DEMO_MODE = APPS_SCRIPT_URL==='COLE_AQUI_A_URL_DO_APPS_SCRIPT';
+
+async function apiCall(action,data={}){
+  if(action==='getProjects'){
+    const res=await fetch(`${APPS_SCRIPT_URL}?action=getProjects`);
+    return res.json();
+  }
+  const res=await fetch(APPS_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action,...data})});
+  return res.json();
+}
+async function loadProjects(){
+  setSyncStatus('loading');
+  try{
+    if(DEMO_MODE){projects=demoData();setSyncStatus('demo');renderDashboard();renderCadastroList();return;}
+    const r=await apiCall('getProjects');
+    if(r.error)throw new Error(r.error);
+    projects=r.projects||[];
+    setSyncStatus('ok');
+  }catch(e){
+    projects=JSON.parse(localStorage.getItem('pv_fallback')||'[]');
+    setSyncStatus('error');
+  }
+  renderDashboard();renderCadastroList();
+}
+async function persistSave(proj){
+  if(DEMO_MODE){const i=projects.findIndex(p=>p.id===proj.id);if(i>=0)projects[i]=proj;else projects.push(proj);return{success:true};}
+  const r=await apiCall('saveProject',{project:proj});
+  if(r.success){const i=projects.findIndex(p=>p.id===proj.id);if(i>=0)projects[i]=proj;else projects.push(proj);localStorage.setItem('pv_fallback',JSON.stringify(projects));}
+  return r;
+}
+async function persistDelete(id){
+  if(DEMO_MODE){projects=projects.filter(p=>p.id!==id);return{success:true};}
+  const r=await apiCall('deleteProject',{id});
+  if(r.success){projects=projects.filter(p=>p.id!==id);localStorage.setItem('pv_fallback',JSON.stringify(projects));}
+  return r;
+}
+function setSyncStatus(s){
+  const el=document.getElementById('sync-status');if(!el)return;
+  const m={loading:{c:'sync-loading',t:'Sincronizando...'},ok:{c:'sync-ok',t:'Sincronizado'},error:{c:'sync-error',t:'Modo offline'},demo:{c:'sync-loading',t:'Modo demo'}};
+  const x=m[s]||m.ok;el.className='sync-status '+x.c;el.textContent=x.t;
+}
+function doLogin(){
+  const u=document.getElementById('login-user').value.trim();
+  const p=document.getElementById('login-pass').value.trim();
+  const err=document.getElementById('login-error');err.style.display='none';
+  if((u==='admin'&&p==='admin123')||(u==='visitante'&&p==='visita123')){
+    currentUser=u==='admin'?'admin':'visitante';
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('app-screen').style.display='flex';
+    document.getElementById('role-badge').textContent=currentUser==='admin'?'Administrador':'Visitante';
+    if(currentUser!=='admin')document.getElementById('nav-cadastro').style.display='none';
+    renderActivitiesForm();loadProjects();
+  }else{err.style.display='block';}
+}
+function doLogout(){currentUser=null;document.getElementById('app-screen').style.display='none';document.getElementById('login-screen').style.display='flex';document.getElementById('login-user').value='';document.getElementById('login-pass').value='';}
+function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');if(id==='dash')renderDashboard();if(id==='cadastro')renderCadastroList();}
+function showTab(id,btn){document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');btn.classList.add('active');if(id==='tab-clientes')renderCadastroList();}
+function renderActivitiesForm(){const c=document.getElementById('activities-form');if(!c)return;c.innerHTML=ACTIVITIES.map((a,i)=>`<div class="activity-row"><div class="activity-name">${i+1}. ${a}</div><div><input type="date" id="act-di-${i}" style="font-size:12px;padding:5px 8px"></div><div><input type="date" id="act-df-${i}" style="font-size:12px;padding:5px 8px"></div><div><select id="act-st-${i}" style="font-size:12px;padding:5px 8px">${ACT_STATUS.map(s=>`<option>${s}</option>`).join('')}</select></div></div>`).join('');}
+function addContact(){const n=document.getElementById('f-cont-nome').value.trim();const r=document.getElementById('f-cont-cargo').value.trim();if(!n)return;tempContacts.push({name:n,role:r});document.getElementById('f-cont-nome').value='';document.getElementById('f-cont-cargo').value='';renderTempContacts();}
+function removeContact(i){tempContacts.splice(i,1);renderTempContacts();}
+function renderTempContacts(){document.getElementById('contacts-preview').innerHTML=tempContacts.map((ct,i)=>`<div class="client-item"><div><span class="client-item-name">${ct.name}</span> <span style="color:var(--text3);font-size:12px">${ct.role}</span></div><button class="remove-btn" onclick="removeContact(${i})">×</button></div>`).join('');}
+async function saveProject(){
+  const nome=document.getElementById('f-nome').value.trim();
+  if(!nome){showMsg('Informe o nome do cliente.','error');return;}
+  const activities=ACTIVITIES.map((a,i)=>({name:a,dateStart:document.getElementById(`act-di-${i}`).value,dateEnd:document.getElementById(`act-df-${i}`).value,status:document.getElementById(`act-st-${i}`).value}));
+  const proj={id:editingId||Date.now(),nome,tipo:document.getElementById('f-tipo').value,servico:document.getElementById('f-servico').value,fase:document.getElementById('f-fase').value,status:document.getElementById('f-status').value,prioridade:document.getElementById('f-prio').value,contrato:document.getElementById('f-contrato').value,perc:parseInt(document.getElementById('f-perc').value)||0,duracao:document.getElementById('f-duracao').value,dtContrato:document.getElementById('f-dtcontrato').value,dtKickoff:document.getElementById('f-dtkickoff').value,dtOutorga:document.getElementById('f-dtoutorga').value,activities,consultoria:document.getElementById('f-consultoria').value,obs:document.getElementById('f-obs').value,contacts:[...tempContacts]};
+  const btn=document.getElementById('btn-save');btn.disabled=true;btn.textContent='Salvando...';setSyncStatus('loading');
+  try{const r=await persistSave(proj);if(r.success){clearForm();showMsg('Projeto salvo com sucesso!','success');renderDashboard();setSyncStatus('ok');}else{showMsg('Erro: '+(r.error||'tente novamente'),'error');setSyncStatus('error');}}catch(e){showMsg('Erro de conexão.','error');setSyncStatus('error');}
+  btn.disabled=false;btn.textContent='Salvar projeto';editingId=null;
+}
+function showMsg(txt,type){const m=document.getElementById('form-msg');m.textContent=txt;m.style.color=type==='success'?'var(--teal)':'var(--red)';m.style.display='block';setTimeout(()=>m.style.display='none',3500);}
+function clearForm(){['f-nome','f-perc','f-duracao','f-dtcontrato','f-dtkickoff','f-dtoutorga','f-consultoria','f-obs'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});tempContacts=[];renderTempContacts();renderActivitiesForm();editingId=null;}
+function editProject(id){const p=projects.find(x=>x.id===id);if(!p)return;editingId=id;document.getElementById('f-nome').value=p.nome;document.getElementById('f-tipo').value=p.tipo;document.getElementById('f-servico').value=p.servico;document.getElementById('f-fase').value=p.fase;document.getElementById('f-status').value=p.status;document.getElementById('f-prio').value=p.prioridade;document.getElementById('f-contrato').value=p.contrato;document.getElementById('f-perc').value=p.perc;document.getElementById('f-duracao').value=p.duracao;document.getElementById('f-dtcontrato').value=p.dtContrato;document.getElementById('f-dtkickoff').value=p.dtKickoff;document.getElementById('f-dtoutorga').value=p.dtOutorga;document.getElementById('f-consultoria').value=p.consultoria;document.getElementById('f-obs').value=p.obs;tempContacts=[...p.contacts];renderTempContacts();renderActivitiesForm();p.activities.forEach((a,i)=>{document.getElementById(`act-di-${i}`).value=a.dateStart;document.getElementById(`act-df-${i}`).value=a.dateEnd;document.getElementById(`act-st-${i}`).value=a.status;});showTab('tab-form',document.getElementById('tab-btn-form'));window.scrollTo({top:0,behavior:'smooth'});}
+async function deleteProject(id){if(!confirm('Remover este projeto?'))return;setSyncStatus('loading');try{const r=await persistDelete(id);if(r.success){renderCadastroList();renderDashboard();setSyncStatus('ok');}else{alert('Erro: '+(r.error||'tente novamente'));setSyncStatus('error');}}catch(e){alert('Erro de conexão.');setSyncStatus('error');}}
+function renderCadastroList(){const c=document.getElementById('cadastro-list-wrap');if(!projects.length){c.innerHTML='<div class="empty-state">Nenhum projeto cadastrado ainda.</div>';return;}c.innerHTML=projects.map(p=>`<div class="client-item"><div><div class="client-item-name">${p.nome}</div><div style="font-size:11px;color:var(--text3);margin-top:2px">${p.servico} · ${p.tipo} · ${p.perc}% concluído</div></div><div style="display:flex;gap:8px;align-items:center">${statusPill(p.status)}${currentUser==='admin'?`<button class="btn btn-secondary btn-sm" onclick="editProject(${p.id})">Editar</button><button class="btn btn-danger" onclick="deleteProject(${p.id})">Remover</button>`:''}</div></div>`).join('');}
+function statusPill(s){const m={'On Track':'pill-green','Delayed':'pill-amber','At Risk':'pill-red','On Hold':'pill-gray','Não iniciado':'pill-gray','Em proposta':'pill-blue','Em andamento':'pill-teal','Impedimento':'pill-red','Em operação':'pill-purple','Concluído':'pill-green','Cancelado':'pill-coral','A iniciar':'pill-gray','Atrasado':'pill-amber'};return `<span class="pill ${m[s]||'pill-gray'}">${s}</span>`;}
+function fmtDate(d){if(!d)return'—';const p=d.split('-');return`${p[2]}/${p[1]}/${p[0]}`;}
+function renderDashboard(){const total=projects.length,egov=projects.filter(p=>p.tipo==='eGov').length,priv=projects.filter(p=>p.tipo==='Privado').length,andamento=projects.filter(p=>p.fase==='Em andamento').length,avgPerc=total?Math.round(projects.reduce((a,p)=>a+p.perc,0)/total):0;document.getElementById('metrics-container').innerHTML=`<div class="metric-card"><div class="metric-label">Total de projetos</div><div class="metric-value">${total}</div></div><div class="metric-card"><div class="metric-label">eGov / Privado</div><div class="metric-value">${egov} / ${priv}</div></div><div class="metric-card"><div class="metric-label">Em andamento</div><div class="metric-value">${andamento}</div></div><div class="metric-card"><div class="metric-label">Conclusão média</div><div class="metric-value">${avgPerc}%</div></div>`;renderCharts();renderTable();}
+function renderCharts(){const fL=["Não iniciado","Em proposta","Em andamento","Impedimento","Em operação","Concluído","Cancelado"],fD=fL.map(f=>projects.filter(p=>p.fase===f).length),sL=["On Track","Delayed","At Risk","On Hold"],sD=sL.map(s=>projects.filter(p=>p.status===s).length);if(chartFases)chartFases.destroy();if(chartStatus)chartStatus.destroy();chartFases=new Chart(document.getElementById('chart-fases'),{type:'doughnut',data:{labels:fL,datasets:[{data:fD,backgroundColor:['#B4B2A9','#85B7EB','#1D9E75','#E24B4A','#7F77DD','#639922','#D85A30'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{family:'DM Sans',size:11},boxWidth:10,padding:8}}}}});chartStatus=new Chart(document.getElementById('chart-status'),{type:'doughnut',data:{labels:sL,datasets:[{data:sD,backgroundColor:['#1D9E75','#EF9F27','#E24B4A','#888780'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{family:'DM Sans',size:11},boxWidth:10,padding:8}}}}});}
+function renderTable(){const ft=document.getElementById('filter-tipo').value,fs=document.getElementById('filter-status').value,list=projects.filter(p=>(!ft||p.tipo===ft)&&(!fs||p.status===fs)),tb=document.getElementById('table-body'),te=document.getElementById('table-empty');if(!list.length){tb.innerHTML='';te.style.display='block';return;}te.style.display='none';tb.innerHTML=list.map(p=>`<tr class="expandable" onclick="toggleRow(${p.id})"><td><span class="arrow" id="arr-${p.id}">▶</span></td><td><span class="client-name-link">${p.nome}</span></td><td><span class="pill ${p.servico==='Software SAAS'?'pill-blue':p.servico==='RTI'?'pill-purple':'pill-teal'}">${p.servico}</span></td><td>${statusPill(p.status)}</td><td><div class="progress-wrap"><div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${p.perc}%"></div></div><span style="font-size:12px;min-width:36px;text-align:right">${p.perc}%</span></div></td><td style="font-size:12px">${fmtDate(p.dtContrato)}</td><td style="font-size:12px">${fmtDate(p.dtKickoff)}</td></tr><tr class="detail-row" id="detail-${p.id}"><td class="detail-cell" colspan="7"><div class="detail-grid"><div class="detail-item"><span class="di-label">Tipo</span><span class="di-value">${p.tipo}</span></div><div class="detail-item"><span class="di-label">Fase</span><span class="di-value">${statusPill(p.fase)}</span></div><div class="detail-item"><span class="di-label">Prioridade</span><span class="di-value">${p.prioridade}</span></div><div class="detail-item"><span class="di-label">Contrato</span><span class="di-value">${p.contrato==='Sim'?'<span class="pill pill-green">Ativo</span>':'<span class="pill pill-red">Inativo</span>'}</span></div><div class="detail-item"><span class="di-label">Duração</span><span class="di-value">${p.duracao||'—'}</span></div><div class="detail-item"><span class="di-label">Outorga</span><span class="di-value">${fmtDate(p.dtOutorga)}</span></div></div>${p.obs?`<div style="margin-bottom:14px"><div class="section-mini">Observações gerais</div><div style="font-size:13px">${p.obs}</div></div>`:''}${p.consultoria?`<div style="margin-bottom:14px"><div class="section-mini">Consultoria realizada</div><div style="font-size:13px">${p.consultoria}</div></div>`:''}${p.contacts&&p.contacts.length?`<div style="margin-bottom:14px"><div class="section-mini">Principais contatos</div>${p.contacts.map(ct=>`<div class="contact-item"><div class="avatar">${ct.name.split(' ').map(w=>w[0]).slice(0,2).join('')}</div><div><div class="contact-name">${ct.name}</div><div class="contact-role">${ct.role}</div></div></div>`).join('')}</div>`:''}.<div class="section-mini">Atividades do projeto</div><table class="acts-table"><thead><tr><th>Atividade</th><th>Início</th><th>Fim</th><th>Status</th></tr></thead><tbody>${p.activities.map(a=>`<tr><td>${a.name}</td><td>${fmtDate(a.dateStart)}</td><td>${fmtDate(a.dateEnd)}</td><td>${statusPill(a.status)}</td></tr>`).join('')}</tbody></table></td></tr>`).join('');}
+function toggleRow(id){const det=document.getElementById('detail-'+id),arr=document.getElementById('arr-'+id),isOpen=det.classList.contains('open');det.classList.toggle('open',!isOpen);arr.classList.toggle('open',!isOpen);}
+function demoData(){return[{id:1,nome:"Prefeitura de Joinville",tipo:"eGov",servico:"Software SAAS",fase:"Em andamento",status:"On Track",prioridade:"Alta",contrato:"Sim",perc:65,duracao:"36 meses",dtContrato:"2023-03-15",dtKickoff:"2023-04-01",dtOutorga:"2023-05-10",consultoria:"Consultoria de implantação.",obs:"Projeto dentro do prazo.",contacts:[{name:"Carlos Mendes",role:"Gestor"},{name:"Ana Lima",role:"TI"}],activities:ACTIVITIES.map((a,i)=>({name:a,dateStart:"2023-04-10",dateEnd:"2023-05-10",status:i<4?"Concluído":i===4?"Em andamento":"A iniciar"}))},{id:2,nome:"Grupo Becker S.A.",tipo:"Privado",servico:"RTI",fase:"Em andamento",status:"Delayed",prioridade:"Média",contrato:"Sim",perc:40,duracao:"24 meses",dtContrato:"2023-07-01",dtKickoff:"2023-08-15",dtOutorga:"",consultoria:"",obs:"Atraso por mudança de escopo.",contacts:[{name:"Roberto Becker",role:"CEO"}],activities:ACTIVITIES.map((a,i)=>({name:a,dateStart:"2023-08-15",dateEnd:"2023-09-15",status:i<2?"Concluído":i===2?"Atrasado":"A iniciar"}))}];}
+</script>
+</body>
+</html>
