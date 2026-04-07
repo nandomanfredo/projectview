@@ -353,7 +353,7 @@ function doLogin(){
     document.getElementById('role-badge').textContent=currentUser==='admin'?'Administrador':currentUser==='operacao'?'Operação':'Visitante';
     ['nav-lista','nav-form','nav-param'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
     if(currentUser==='visitante'){['nav-lista','nav-form','nav-param'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
-    if(currentUser==='operacao'){['nav-form','nav-param'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});}
+    if(currentUser==='operacao'){['nav-form','nav-param'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});showPage('lista',document.getElementById('nav-lista'));}
     renderActivitiesForm();loadProjects();
   }else{err.style.display='block';}
 }
