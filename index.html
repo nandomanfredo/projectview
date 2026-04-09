@@ -142,6 +142,14 @@ tr.expandable:hover td{background:var(--surface2)}
 .contrato-empresa{font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--text2)}
 .contrato-empresa:last-child{border-bottom:none}
 .contrato-empty{font-size:12px;color:var(--text3);padding:6px 0;font-style:italic}
+.dash-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:18px;box-shadow:var(--shadow);overflow:hidden}
+.dash-section-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;cursor:pointer;user-select:none;transition:background .15s}
+.dash-section-header:hover{background:var(--surface2)}
+.dash-section-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.dash-section-arrow{font-size:14px;color:var(--text3);transition:transform .22s;display:inline-block}
+.dash-section-arrow.collapsed{transform:rotate(-90deg)}
+.dash-section-body{overflow:hidden;transition:max-height .28s ease,opacity .22s ease;max-height:2000px;opacity:1;padding:0 20px}
+.dash-section-body.collapsed{max-height:0;opacity:0;padding:0 20px}
 @media(max-width:768px){.metrics-grid{grid-template-columns:1fr 1fr}.charts-row{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.detail-grid{grid-template-columns:1fr 1fr}.main{padding:16px}}
 </style>
 </head>
@@ -191,36 +199,85 @@ tr.expandable:hover td{background:var(--surface2)}
   </div>
   <div class="main">
     <div class="page active" id="page-dash">
+
+      <!-- Barra de controle do dashboard -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:14px;gap:8px">
+        <button onclick="dashCollapseAll()" id="dash-btn-collapse" style="font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='var(--surface)'">⊖ Recolher tudo</button>
+        <button onclick="dashExpandAll()" id="dash-btn-expand" style="font-size:12px;padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:6px" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='var(--surface)'">⊕ Expandir tudo</button>
+      </div>
+
+      <!-- Alertas de vencimento -->
       <div id="alertas-panel" style="margin-bottom:18px"></div>
-      <div class="metrics-grid" id="metrics-container"></div>
-      <div class="charts-row">
-        <div class="card" style="padding:18px">
-          <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Contratos por situação</div>
-          <div id="contratos-panel"></div>
+
+      <!-- Métricas -->
+      <div class="dash-section" id="ds-metricas">
+        <div class="dash-section-header" onclick="toggleDashSection('metricas')">
+          <span class="dash-section-title">Resumo executivo</span>
+          <span class="dash-section-arrow" id="dsa-metricas">▾</span>
         </div>
-        <div class="card" style="padding:18px">
-          <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Projetos em operação</div>
-          <div id="emoperacao-panel"></div>
+        <div class="dash-section-body" id="dsb-metricas">
+          <div class="metrics-grid" id="metrics-container" style="margin-bottom:0;padding:18px 0 4px"></div>
         </div>
       </div>
-      <div class="card" style="padding:18px;margin-bottom:22px">
-        <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Saúde dos projetos</div>
-        <div id="saude-panel"></div>
-      </div>
-      <div class="card" style="padding:18px;margin-bottom:22px">
-        <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">RTI — Receita Total Recuperada</div>
-        <div id="rti-panel"></div>
-      </div>
-      <div class="card" style="padding:18px;margin-bottom:22px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-          <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Consultorias realizadas</div>
-          <div style="display:flex;align-items:center;gap:10px">
-            <button id="cons-sort-btn" onclick="toggleConsSortOrder()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:4px;transition:all .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='var(--surface)'">↓ Mais recentes</button>
-            <span id="cons-total-badge" style="font-size:11px;color:var(--text3)"></span>
+
+      <!-- Contratos + Em operação -->
+      <div class="dash-section" id="ds-contratos">
+        <div class="dash-section-header" onclick="toggleDashSection('contratos')">
+          <span class="dash-section-title">Contratos e operação</span>
+          <span class="dash-section-arrow" id="dsa-contratos">▾</span>
+        </div>
+        <div class="dash-section-body" id="dsb-contratos">
+          <div class="charts-row" style="margin-bottom:0;padding:18px 0 4px">
+            <div class="card" style="padding:18px;margin-bottom:0">
+              <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Contratos por situação</div>
+              <div id="contratos-panel"></div>
+            </div>
+            <div class="card" style="padding:18px;margin-bottom:0">
+              <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px">Projetos em operação</div>
+              <div id="emoperacao-panel"></div>
+            </div>
           </div>
         </div>
-        <div id="consultorias-panel"></div>
       </div>
+
+      <!-- Saúde dos projetos -->
+      <div class="dash-section" id="ds-saude">
+        <div class="dash-section-header" onclick="toggleDashSection('saude')">
+          <span class="dash-section-title">Saúde dos projetos</span>
+          <span class="dash-section-arrow" id="dsa-saude">▾</span>
+        </div>
+        <div class="dash-section-body" id="dsb-saude">
+          <div style="padding:18px 0 4px"><div id="saude-panel"></div></div>
+        </div>
+      </div>
+
+      <!-- RTI -->
+      <div class="dash-section" id="ds-rti">
+        <div class="dash-section-header" onclick="toggleDashSection('rti')">
+          <span class="dash-section-title">RTI — Receita Total Recuperada</span>
+          <span class="dash-section-arrow" id="dsa-rti">▾</span>
+        </div>
+        <div class="dash-section-body" id="dsb-rti">
+          <div style="padding:18px 0 4px"><div id="rti-panel"></div></div>
+        </div>
+      </div>
+
+      <!-- Consultorias -->
+      <div class="dash-section" id="ds-consultorias">
+        <div class="dash-section-header" onclick="toggleDashSection('consultorias')">
+          <span class="dash-section-title">Consultorias realizadas</span>
+          <div style="display:flex;align-items:center;gap:10px">
+            <button id="cons-sort-btn" onclick="event.stopPropagation();toggleConsSortOrder()" style="font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='var(--surface)'">↓ Mais recentes</button>
+            <span id="cons-total-badge" style="font-size:11px;color:var(--text3)"></span>
+            <span class="dash-section-arrow" id="dsa-consultorias">▾</span>
+          </div>
+        </div>
+        <div class="dash-section-body" id="dsb-consultorias">
+          <div style="padding:18px 0 4px"><div id="consultorias-panel"></div></div>
+        </div>
+      </div>
+
+      <!-- Lista de clientes — sempre visível -->
       <div class="card">
         <div class="card-title">
           <span>Lista de clientes</span>
@@ -478,6 +535,10 @@ async function persistDeleteUser(id){if(DEMO_MODE){saveUsersLocal(loadUsers().fi
 function roleLabel(r){return r==='admin'?'Administrador':r==='operacao'?'Operação':r==='cs'?'CS':'Visitante';}
 function rolePill(r){const m={admin:'pill-blue',operacao:'pill-teal',cs:'pill-purple',visitante:'pill-gray'};return '<span class="pill '+(m[r]||'pill-gray')+'">'+roleLabel(r)+'</span>';}
 function consPill(s){const m={'Não iniciada':'pill-gray','Pendente':'pill-amber','Concluída':'pill-green'};return '<span class="pill '+(m[s]||'pill-gray')+'">'+(s||'—')+'</span>';}
+const DASH_SECTIONS=['metricas','contratos','saude','rti','consultorias'];
+function toggleDashSection(id){const body=document.getElementById('dsb-'+id);const arrow=document.getElementById('dsa-'+id);if(!body)return;const collapsed=body.classList.toggle('collapsed');if(arrow)arrow.classList.toggle('collapsed',collapsed);}
+function dashCollapseAll(){DASH_SECTIONS.forEach(id=>{const body=document.getElementById('dsb-'+id);const arrow=document.getElementById('dsa-'+id);if(body){body.classList.add('collapsed');}if(arrow){arrow.classList.add('collapsed');}});}
+function dashExpandAll(){DASH_SECTIONS.forEach(id=>{const body=document.getElementById('dsb-'+id);const arrow=document.getElementById('dsa-'+id);if(body){body.classList.remove('collapsed');}if(arrow){arrow.classList.remove('collapsed');}});}
 function toggleConsSortOrder(){consSortOrder=consSortOrder==='desc'?'asc':'desc';const btn=document.getElementById('cons-sort-btn');if(btn)btn.innerHTML=consSortOrder==='desc'?'↓ Mais recentes':'↑ Mais antigas';renderConsultoriasDashboard();}
 let editingUserId=null;
 async function renderParamPage(){const ul=document.getElementById('param-users-list');if(ul)ul.innerHTML='<div style="color:var(--text3);font-size:13px;padding:12px 0">Carregando usuários...</div>';const users=loadUsers();const total=users.length,admins=users.filter(u=>u.role==='admin').length,ops=users.filter(u=>u.role==='operacao').length,css=users.filter(u=>u.role==='cs').length,vists=users.filter(u=>u.role==='visitante').length,ativos=users.filter(u=>u.ativo!==false).length;document.getElementById('param-stats').innerHTML='<div class="metric-card"><div class="metric-label">Total de usuários</div><div class="metric-value">'+total+'</div></div><div class="metric-card" style="border-left:3px solid var(--blue)"><div class="metric-label" style="color:var(--blue)">Administradores</div><div class="metric-value" style="color:var(--blue)">'+admins+'</div></div><div class="metric-card" style="border-left:3px solid var(--teal)"><div class="metric-label" style="color:var(--teal)">Operação</div><div class="metric-value" style="color:var(--teal)">'+ops+'</div></div><div class="metric-card" style="border-left:3px solid var(--purple)"><div class="metric-label" style="color:var(--purple)">CS</div><div class="metric-value" style="color:var(--purple)">'+css+'</div></div><div class="metric-card" style="border-left:3px solid var(--gray)"><div class="metric-label">Visitantes</div><div class="metric-value">'+vists+'</div></div><div class="metric-card" style="border-left:3px solid var(--green)"><div class="metric-label" style="color:var(--green)">Ativos</div><div class="metric-value" style="color:var(--green)">'+ativos+'</div></div><div class="metric-card" style="border-left:3px solid var(--red)"><div class="metric-label" style="color:var(--red)">Inativos</div><div class="metric-value" style="color:var(--red)">'+(total-ativos)+'</div></div>';renderUsersList();}
