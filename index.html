@@ -3,66 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ProjectView — Painel de Projetos</title>
+<title>agnes | ProjectView</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F7F8FA;--surface:#FFFFFF;--surface2:#F1F3F7;--border:#E2E5EC;--border2:#C8CDD8;
-  --text:#1A1D24;--text2:#5A6070;--text3:#9099AC;
-  --blue:#185FA5;--blue-light:#E6F1FB;--blue-dark:#0C447C;
-  --green:#1D9E75;--green-light:#E1F5EE;
-  --amber:#BA7517;--amber-light:#FAEEDA;
-  --red:#A32D2D;--red-light:#FCEBEB;
-  --purple:#534AB7;--purple-light:#EEEDFE;
-  --teal:#0F6E56;--teal-light:#E1F5EE;
-  --coral:#993C1D;--coral-light:#FAECE7;
-  --gray:#5F5E5A;--gray-light:#F1EFE8;
+  --bg:#F8F7FC;--surface:#FFFFFF;--surface2:#F3F0FA;--border:#E8E2F5;--border2:#C9C0E0;
+  --text:#1A1525;--text2:#5A5070;--text3:#9490A8;
+  --blue:#6D28D9;--blue-light:#EDE9FE;--blue-dark:#4C1D95;
+  --green:#059669;--green-light:#D1FAE5;
+  --amber:#B45309;--amber-light:#FEF3C7;
+  --red:#B91C1C;--red-light:#FEE2E2;
+  --purple:#4338CA;--purple-light:#E0E7FF;
+  --teal:#0D9488;--teal-light:#CCFBF1;
+  --coral:#BE4B22;--coral-light:#FFEDD5;
+  --gray:#6B7280;--gray-light:#F3F4F6;
+  --agnes-green:#10B981;--agnes-green-light:#D1FAE5;
   --radius:10px;--radius-sm:6px;--radius-lg:14px;
-  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:0 4px 12px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.05);
+  --shadow:0 1px 3px rgba(109,40,217,.06),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 12px rgba(109,40,217,.10),0 1px 3px rgba(0,0,0,.05);
+  --shadow-lg:0 20px 60px rgba(109,40,217,.12),0 4px 20px rgba(0,0,0,.06);
 }
 body{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);line-height:1.5}
 .app{min-height:100vh;display:flex;flex-direction:column}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border),0 2px 8px rgba(109,40,217,.04)}
 .logo{font-size:17px;font-weight:600;letter-spacing:-.3px}.logo span{color:var(--blue)}
 .topbar-right{display:flex;align-items:center;gap:12px}
-.badge-role{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);font-weight:500}
+.badge-role{font-size:11px;padding:4px 12px;border-radius:20px;background:var(--blue-light);color:var(--blue-dark);font-weight:600;letter-spacing:.2px}
 .sync-status{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
 .sync-ok{background:var(--green-light);color:var(--teal)}
 .sync-loading{background:var(--amber-light);color:var(--amber)}
 .sync-error{background:var(--red-light);color:var(--red)}
 .nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:0;padding:0 28px}
-.nav-btn{padding:11px 18px;font-size:13px;font-family:'DM Sans',sans-serif;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);transition:all .15s;font-weight:500}
-.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
-.nav-btn:hover:not(.active){color:var(--text)}
+.nav-btn{padding:12px 18px;font-size:13px;font-family:'DM Sans',sans-serif;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);transition:all .18s;font-weight:500}
+.nav-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.nav-btn:hover:not(.active){color:var(--text);background:var(--surface2);border-radius:6px 6px 0 0}
 .main{padding:28px;flex:1;max-width:1200px;width:100%;margin:0 auto}
-.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg)}
-.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:36px;width:380px;box-shadow:var(--shadow-md)}
-.login-logo{font-size:22px;font-weight:600;margin-bottom:4px}.login-logo span{color:var(--blue)}
-.login-sub{font-size:13px;color:var(--text2);margin-bottom:28px}
-.login-form{display:flex;flex-direction:column;gap:16px}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#F5F0FF 0%,#FAF8FF 50%,#F0FDF9 100%);position:relative;overflow:hidden}
+.login-wrap::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(109,40,217,.07) 0%,transparent 65%);top:-180px;left:-160px;pointer-events:none}
+.login-wrap::after{content:'';position:absolute;width:480px;height:480px;background:radial-gradient(circle,rgba(16,185,129,.06) 0%,transparent 65%);bottom:-120px;right:-100px;pointer-events:none}
+.login-card{background:#fff;border:1px solid rgba(109,40,217,.12);border-radius:20px;padding:48px 44px;width:420px;box-shadow:var(--shadow-lg);position:relative;z-index:1}
+.login-brand{display:flex;flex-direction:column;align-items:center;margin-bottom:32px;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.login-brand-name{font-size:32px;font-weight:700;color:var(--blue);letter-spacing:-1px;margin-top:10px;line-height:1}
+.login-app-badge{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:1.2px;margin-top:10px;padding:4px 14px;background:var(--surface2);border-radius:20px;border:1px solid var(--border)}
+.login-heading{font-size:17px;font-weight:600;color:var(--text);margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--text2);margin-bottom:22px}
+.login-form{display:flex;flex-direction:column;gap:14px}
 .form-group{display:flex;flex-direction:column;gap:5px}
 label{font-size:12px;color:var(--text2);font-weight:500}
 input,select,textarea{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
-input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(109,40,217,.08);outline:none}
 textarea{resize:vertical;min-height:80px}
-.login-error{font-size:12px;color:var(--red);display:none}
-.login-hint{font-size:11px;color:var(--text3);text-align:center;padding:10px;background:var(--surface2);border-radius:var(--radius-sm)}
+.login-error{font-size:12px;color:var(--red);display:none;padding:8px 12px;background:var(--red-light);border-radius:var(--radius-sm);border-left:3px solid var(--red)}
+.login-hint{font-size:11px;color:var(--text3);text-align:center;padding:10px 12px;background:var(--surface2);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.login-footer{text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);font-size:11px;color:var(--text3)}
 .btn{padding:8px 18px;border-radius:var(--radius-sm);font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all .15s}
-.btn-primary{background:var(--blue);color:#fff;border:none}
-.btn-primary:hover{background:var(--blue-dark)}
-.btn-primary:disabled{background:var(--border2);cursor:default}
+.btn-primary{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);color:#fff;border:none;box-shadow:0 4px 14px rgba(109,40,217,.25)}
+.btn-primary:hover{background:linear-gradient(135deg,#7C3AED 0%,var(--blue) 100%);box-shadow:0 6px 18px rgba(109,40,217,.32);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
+.btn-primary:disabled{background:var(--border2);box-shadow:none;cursor:default;transform:none}
 .btn-secondary{background:none;border:1px solid var(--border2);color:var(--text)}
 .btn-secondary:hover{background:var(--surface2)}
 .btn-danger{background:none;border:1px solid #E24B4A;color:#E24B4A;font-size:12px;padding:5px 12px}
 .btn-sm{padding:5px 12px;font-size:12px}
-.logout-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 12px;font-size:12px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif}
-.logout-btn:hover{background:var(--surface2)}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.logout-btn{background:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 14px;font-size:12px;cursor:pointer;color:var(--text2);font-family:'DM Sans',sans-serif;transition:all .15s;font-weight:500}
+.logout-btn:hover{background:var(--red-light);border-color:#FCA5A5;color:var(--red)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px;margin-bottom:18px;box-shadow:var(--shadow);transition:box-shadow .2s}
 .card-title{font-size:14px;font-weight:600;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;box-shadow:var(--shadow)}
+.metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 22px;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s}
+.metric-card:hover{box-shadow:0 6px 20px rgba(109,40,217,.10);transform:translateY(-2px)}
 .metric-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
 .metric-value{font-size:26px;font-weight:600;line-height:1.1;color:var(--text)}
 .metrics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
@@ -139,21 +149,36 @@ tr.expandable:hover td{background:var(--surface2)}
 
 <div id="login-screen" class="login-wrap">
   <div class="login-card">
-    <div class="login-logo">Project<span>View</span></div>
-    <div class="login-sub">Painel executivo de projetos em implantação</div>
+    <div class="login-brand">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 6C17.64 6 6 17.64 6 32C6 46.36 17.64 58 32 58C39.18 58 45.68 55.1 50.48 50.48C55.1 45.86 58 39.36 58 32" stroke="#10B981" stroke-width="6" stroke-linecap="round"/>
+        <circle cx="58" cy="20" r="7" fill="#10B981"/>
+      </svg>
+      <div class="login-brand-name">agnes</div>
+      <div class="login-app-badge">ProjectView</div>
+    </div>
+    <div class="login-heading">Bem-vindo de volta</div>
+    <div class="login-sub">Acesse o painel executivo de projetos</div>
     <div class="login-form">
       <div class="form-group"><label>Usuário</label><input type="text" id="login-user" placeholder="Digite seu usuário" autocomplete="username"></div>
       <div class="form-group"><label>Senha</label><input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"></div>
       <div id="login-error" class="login-error">Usuário ou senha incorretos.</div>
-      <button class="btn btn-primary" onclick="doLogin()">Entrar</button>
-      <div class="login-hint">Acesso restrito — entre em contato com o administrador</div>
+      <button class="btn btn-primary" onclick="doLogin()" style="width:100%;padding:11px 18px;font-size:14px;border-radius:10px;margin-top:4px;letter-spacing:.2px">Entrar</button>
+      <div class="login-hint" style="margin-top:4px">Acesso restrito — entre em contato com o administrador</div>
     </div>
+    <div class="login-footer">© 2025 agnes. Todos os direitos reservados.</div>
   </div>
 </div>
 
 <div id="app-screen" class="app" style="display:none">
   <div class="topbar">
-    <div class="logo">Project<span>View</span></div>
+    <div class="logo" style="display:flex;align-items:center;gap:8px">
+      <svg width="26" height="26" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 6C17.64 6 6 17.64 6 32C6 46.36 17.64 58 32 58C39.18 58 45.68 55.1 50.48 50.48C55.1 45.86 58 39.36 58 32" stroke="#10B981" stroke-width="6.5" stroke-linecap="round"/>
+        <circle cx="58" cy="20" r="7" fill="#10B981"/>
+      </svg>
+      <span style="color:var(--blue);font-weight:700;font-size:18px;letter-spacing:-.4px">agnes</span><span style="color:var(--border2);margin:0 6px;font-weight:300">|</span><span style="font-weight:500;font-size:14px;color:var(--text2)">ProjectView</span>
+    </div>
     <div class="topbar-right">
       <span id="sync-status" class="sync-status sync-loading">Conectando...</span>
       <span id="role-badge" class="badge-role"></span>
