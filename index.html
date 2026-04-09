@@ -149,9 +149,11 @@ tr.expandable:hover td{background:var(--surface2)}
 
 <div id="login-screen" class="login-wrap">
   <div class="login-card">
-    <div class="login-brand">
-      <img src="agnes-logo.png" alt="agnes" style="height:60px;width:auto;display:block">
-      <div class="login-app-badge">ProjectView</div>
+    <div class="login-brand" style="margin:-48px -44px 32px -44px;padding:32px 44px 28px;background:linear-gradient(135deg,#6D28D9 0%,#4C1D95 100%);border-radius:20px 20px 0 0;position:relative;overflow:hidden">
+      <div style="position:absolute;width:200px;height:200px;background:rgba(255,255,255,.05);border-radius:50%;top:-80px;right:-60px;pointer-events:none"></div>
+      <div style="position:absolute;width:120px;height:120px;background:rgba(16,185,129,.08);border-radius:50%;bottom:-40px;left:-20px;pointer-events:none"></div>
+      <img src="agnes-logo.png" alt="agnes" style="height:52px;width:auto;display:block;position:relative;z-index:1">
+      <div class="login-app-badge" style="margin-top:14px;background:rgba(255,255,255,.15);color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.2);backdrop-filter:blur(4px)">ProjectView</div>
     </div>
     <div class="login-heading">Bem-vindo de volta</div>
     <div class="login-sub">Acesse o painel executivo de projetos</div>
@@ -169,7 +171,9 @@ tr.expandable:hover td{background:var(--surface2)}
 <div id="app-screen" class="app" style="display:none">
   <div class="topbar">
     <div class="logo" style="display:flex;align-items:center;gap:10px">
-      <img src="agnes-logo.png" alt="agnes" style="height:28px;width:auto;display:block">
+      <div style="background:linear-gradient(135deg,#6D28D9,#4C1D95);padding:5px 12px;border-radius:8px;display:flex;align-items:center">
+        <img src="agnes-logo.png" alt="agnes" style="height:22px;width:auto;display:block">
+      </div>
       <span style="color:var(--border2);font-weight:300;font-size:18px">|</span>
       <span style="font-weight:500;font-size:13px;color:var(--text2);letter-spacing:.2px">ProjectView</span>
     </div>
