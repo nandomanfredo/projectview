@@ -289,20 +289,65 @@ tr.expandable:hover td{background:var(--surface2)}
 
       <!-- NotebookLM — visível para admin e operação -->
       <div id="notebooklm-banner" style="display:none;margin-bottom:18px">
-        <div style="background:linear-gradient(135deg,#1a73e8 0%,#0d47a1 100%);border-radius:var(--radius-lg);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(26,115,232,.25)">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="width:40px;height:40px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="white"/></svg>
-            </div>
-            <div>
-              <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:2px">Lei do Motorista</div>
-              <div style="font-size:12px;color:rgba(255,255,255,.8)">Regulamentação da Profissão e Jornada de Trabalho — Base de conhecimento no NotebookLM</div>
-            </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow)">
+
+          <!-- Badge topo -->
+          <div style="padding:10px 20px 0">
+            <span style="display:inline-block;font-size:11px;font-weight:600;color:#0d7a5f;background:#d1fae5;padding:3px 12px;border-radius:20px;letter-spacing:.3px">Acessar conhecimento</span>
           </div>
-          <a href="https://notebooklm.google.com/notebook/260c9214-ea0a-4760-a848-542d38bb9a97" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#1a73e8;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0;transition:box-shadow .15s;font-family:'DM Sans',sans-serif" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,.18)'" onmouseout="this.style.boxShadow='none'">
-            Abrir no NotebookLM
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" fill="#1a73e8"/></svg>
-          </a>
+
+          <!-- Header: logo + descrição + botão -->
+          <div style="display:flex;align-items:flex-start;gap:20px;padding:14px 20px 16px">
+            <!-- Logo NotebookLM -->
+            <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;padding-top:2px">
+              <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32 8C18.7 8 8 18.7 8 32" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round"/>
+                <path d="M32 16C23.2 16 16 23.2 16 32" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round"/>
+                <path d="M32 24C27.6 24 24 27.6 24 32" stroke="#1a1a1a" stroke-width="5.5" stroke-linecap="round"/>
+                <circle cx="32" cy="32" r="4" fill="#1a1a1a"/>
+              </svg>
+              <span style="font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-.3px">NotebookLM</span>
+            </div>
+
+            <!-- Texto descritivo -->
+            <div style="flex:1;font-size:12px;color:var(--text2);line-height:1.6">
+              O <strong style="color:var(--text)">NotebookLM — Lei do Motorista</strong> é um assistente de pesquisa embasado em fontes oficiais sobre regulamentação da profissão e jornada de trabalho. Isso ajuda a mostrar respostas e insights mais precisos, com base no material selecionado, reduzindo a chance de erros e alucinações de IA.
+            </div>
+
+            <!-- Botão -->
+            <a href="https://notebooklm.google.com/notebook/260c9214-ea0a-4760-a848-542d38bb9a97" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#1a73e8,#0d47a1);color:#fff;font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;text-decoration:none;white-space:nowrap;flex-shrink:0;font-family:'DM Sans',sans-serif;box-shadow:0 2px 8px rgba(26,115,232,.3);transition:box-shadow .15s" onmouseover="this.style.boxShadow='0 4px 14px rgba(26,115,232,.45)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(26,115,232,.3)'">
+              Abrir no NotebookLM
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" fill="#fff"/></svg>
+            </a>
+          </div>
+
+          <!-- Divisor -->
+          <div style="border-top:1px solid var(--border);margin:0 20px"></div>
+
+          <!-- Fontes -->
+          <div style="padding:12px 20px 10px">
+            <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:8px">Fontes atualmente disponíveis:</div>
+            <ul style="margin:0;padding-left:16px;display:flex;flex-direction:column;gap:3px">
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Portal Gov.br - Apurar carnê-leão:</strong> Orientações sobre o serviço digital da Receita Federal para recolhimento mensal obrigatório de IRPF por pessoas físicas.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Câmara dos Deputados - PL nº 1.324/2022:</strong> Relatório técnico que propõe redução da base de cálculo do IRPF para transportadores de passageiros de 60% para 20%.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>G1 - Redução do Imposto de Renda:</strong> Reportagem sobre a aprovação no Senado da medida que beneficia taxistas e motoristas de aplicativo.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Blog Fortes Tecnologia - Encargos do Transportador Autônomo:</strong> Guia prático com cálculos sobre INSS, IRRF, ISS e contribuições ao SEST/SENAT.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Revista Caminhoneiro - IR para Transportadores de Carga:</strong> Artigo sobre apuração e declaração de IR especificamente para a categoria de carga.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Revista Caminhoneiro - INSS e Tributação de Carga:</strong> Explica a contribuição previdenciária e a responsabilidade das empresas contratantes na retenção de tributos.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>InvesTalk - IRPF 2025 para Motoristas de Aplicativo:</strong> Como declarar ganhos de plataformas como Uber e 99, com destaque nos limites de isenção.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Lei nº 13.103/2015 (Lei do Motorista):</strong> Legislação federal que disciplina jornada de trabalho, tempo de direção e direitos dos motoristas profissionais.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Lei nº 14.206/2021 (Lei do DT-e):</strong> Institui o Documento Eletrônico de Transporte e regulamenta o pagamento de frete ao Transportador Autônomo de Cargas (TAC).</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Lei nº 15.270/2025 (Reforma Tributária da Renda):</strong> Amplia isenção do IRPF para rendimentos mensais de até R$ 5.000,00 e altera regras de dividendos.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>GBrasil - Livro-caixa e Deduções no IR:</strong> Como autônomos podem abater despesas essenciais ao negócio para reduzir o imposto devido.</li>
+              <li style="font-size:11px;color:var(--text2);line-height:1.5"><strong>Propulsor - MEI ou Autônomo para Motoristas de App:</strong> Comparativo entre atuar como pessoa física ou abrir MEI, visando economia de impostos.</li>
+            </ul>
+          </div>
+
+          <!-- Nota rodapé -->
+          <div style="padding:8px 20px 14px">
+            <div style="font-size:10px;color:var(--text3);font-style:italic;border-top:1px dashed var(--border);padding-top:8px">Para colocar uma fonte nova, faça a solicitação para o Gerente de Projetos Responsável.</div>
+          </div>
+
         </div>
       </div>
 
