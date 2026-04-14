@@ -526,7 +526,7 @@ function doLogin(){
   if(inativo){err.textContent='Usuário inativo. Contate o administrador.';err.style.display='block';return;}
   if(found){
     currentUser=found.role;
-    currentUserAssignedProjects=(found.role==='operacao'&&found.projetos&&found.projetos.length)?found.projetos:null;
+    currentUserAssignedProjects=(found.role==='operacao')?(found.projetos&&found.projetos.length?found.projetos:null):null;
     document.getElementById('login-screen').style.display='none';
     document.getElementById('app-screen').style.display='flex';
     document.getElementById('role-badge').textContent=currentUser==='admin'?'Administrador':currentUser==='operacao'?'Operação':currentUser==='cs'?'CS':'Visitante';
@@ -652,7 +652,7 @@ function toggleRow(id){const det=document.getElementById('detail-'+id),arr=docum
 function defaultUsers(){return[{id:1,nome:'Administrador',user:'admin',pass:'PasswdAgnes2026!\u00e7',role:'admin',email:'',ativo:true},{id:2,nome:'Fernando Oliveira',user:'fernando.oliveira',pass:'PasswdAgnes2026!\u00e7',role:'admin',email:'',ativo:true},{id:3,nome:'Visitante',user:'visitante',pass:'visita123',role:'visitante',email:'',ativo:true},{id:4,nome:'Gabriel Fachini',user:'gabriel.fachini',pass:'Agnes2026!\u00c7',role:'visitante',email:'',ativo:true},{id:5,nome:'Operação',user:'operacao',pass:'Operacao2026!',role:'operacao',email:'',ativo:true}];}
 function loadUsers(){try{const s=localStorage.getItem('pv_users');return s?JSON.parse(s):defaultUsers();}catch(e){return defaultUsers();}}
 function saveUsersLocal(arr){localStorage.setItem('pv_users',JSON.stringify(arr));}
-async function fetchUsersFromBackend(){if(DEMO_MODE)return loadUsers();try{const r=await apiCall('getUsers');if(r.error)throw new Error(r.error);const users=r.users||[];if(users.length>0)saveUsersLocal(users);return loadUsers();}catch(e){return loadUsers();}}
+async function fetchUsersFromBackend(){if(DEMO_MODE)return loadUsers();try{const r=await apiCall('getUsers');if(r.error)throw new Error(r.error);const users=r.users||[];if(users.length>0){const local=loadUsers();const merged=users.map(u=>{const loc=local.find(l=>String(l.id)===String(u.id));const projetos=u.projetos!==undefined?u.projetos:(loc?.projetos||[]);return{...u,projetos};});saveUsersLocal(merged);}return loadUsers();}catch(e){return loadUsers();}}
 async function persistSaveUser(userObj){if(DEMO_MODE){const users=loadUsers();const i=users.findIndex(u=>String(u.id)===String(userObj.id));if(i>=0)users[i]=userObj;else users.push(userObj);saveUsersLocal(users);return{success:true};}try{const r=await apiCall('saveUser',{user:userObj});if(r.success){const users=loadUsers();const i=users.findIndex(u=>String(u.id)===String(userObj.id));if(i>=0)users[i]=userObj;else users.push(userObj);saveUsersLocal(users);}return r;}catch(e){return{success:false,error:e.message};}}
 async function persistDeleteUser(id){if(DEMO_MODE){saveUsersLocal(loadUsers().filter(u=>String(u.id)!==String(id)));return{success:true};}try{const r=await apiCall('deleteUser',{id});if(r.success)saveUsersLocal(loadUsers().filter(u=>String(u.id)!==String(id)));return r;}catch(e){return{success:false,error:e.message};}}
 function roleLabel(r){return r==='admin'?'Administrador':r==='operacao'?'Operação':r==='cs'?'CS':'Visitante';}
