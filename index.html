@@ -566,8 +566,28 @@ function editProject(id){const p=projects.find(x=>x.id===id);if(!p)return;editin
 async function deleteProject(id){if(!confirm('Remover este projeto?'))return;setSyncStatus('loading');try{const r=await persistDelete(id);if(r.success){renderCadastroList();renderDashboard();setSyncStatus('ok');}else{alert('Erro: '+(r.error||'tente novamente'));setSyncStatus('error');}}catch(e){alert('Erro de conexão.');setSyncStatus('error');}}
 function renderCadastroList(){
   const c=document.getElementById('cadastro-list-wrap');
+  // DEBUG TEMPORÁRIO — remover após diagnóstico
+  if(currentUser==='operacao'){
+    const u=loadUsers().find(x=>x.user===document.getElementById('login-user')?.value||x.role==='operacao');
+    const pm=JSON.parse(localStorage.getItem('pv_projetos_map')||'{}');
+    const allU=loadUsers();
+    const loggedU=allU.find(x=>x.role==='operacao'&&x.user===(document.getElementById('role-badge')?.textContent==='Operação'?x.user:''));
+    console.log('[DEBUG] currentUserAssignedProjects:', currentUserAssignedProjects);
+    console.log('[DEBUG] pv_projetos_map:', pm);
+    console.log('[DEBUG] all operacao users:', allU.filter(x=>x.role==='operacao').map(x=>({id:x.id,nome:x.nome,projetos:x.projetos})));
+    console.log('[DEBUG] projects total:', projects.length, projects.map(p=>({id:p.id,nome:p.nome})));
+    const dbg=document.getElementById('debug-operacao-panel')||document.createElement('div');
+    dbg.id='debug-operacao-panel';
+    dbg.style.cssText='background:#1e1b4b;color:#c4b5fd;font-family:monospace;font-size:11px;padding:10px 14px;border-radius:6px;margin-bottom:14px;line-height:1.6';
+    dbg.innerHTML='<b style="color:#a78bfa">🔍 DEBUG — remover após teste</b><br>'
+      +'currentUserAssignedProjects: <b>'+JSON.stringify(currentUserAssignedProjects)+'</b><br>'
+      +'pv_projetos_map: <b>'+JSON.stringify(pm)+'</b><br>'
+      +'Usuários Operação: <b>'+JSON.stringify(allU.filter(x=>x.role==='operacao').map(x=>({id:x.id,nome:x.nome,projetos:x.projetos})))+'</b><br>'
+      +'Total projetos no sistema: <b>'+projects.length+'</b>';
+    c.innerHTML='';c.appendChild(dbg);
+  }
   const vp=getVisibleProjects();
-  if(!vp.length){c.innerHTML='<div class="empty-state">Nenhum projeto cadastrado ainda.</div>';return;}
+  if(!vp.length){c.innerHTML=(document.getElementById('debug-operacao-panel')||document.createElement('div')).outerHTML+'<div class="empty-state">Nenhum projeto cadastrado ainda.</div>';return;}
   const az=(a,b)=>a.nome.localeCompare(b.nome,'pt',{sensitivity:'base'});
   const privado=vp.filter(p=>p.tipo==='Privado'&&p.contrato!=='Não').sort(az);
   const egov=vp.filter(p=>p.tipo==='eGov'&&p.contrato!=='Não').sort(az);
