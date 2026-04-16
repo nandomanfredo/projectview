@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projeto São Paulo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
+    header { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 18px; font-weight: 600; }
+    header span { font-size: 12px; color: #888; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+    .card { background: #fff; border-radius: 8px; border: 1px solid #e5e5e5; padding: 16px; }
+    .card label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+    .card strong { font-size: 26px; font-weight: 600; }
+    .card.verde strong { color: #1D9E75; }
+    .card.amarelo strong { color: #BA7517; }
+    .card.vermelho strong { color: #E24B4A; }
+    .section { background: #fff; border-radius: 8px; border: 1px solid #e5e5e5; padding: 20px; margin-bottom: 20px; }
+    .section h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+    .progress-wrap { margin-bottom: 12px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+    .progress-bg { background: #f0f0f0; border-radius: 4px; height: 8px; }
+    .progress-fill { height: 8px; border-radius: 4px; background: #1D9E75; }
+    .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filters input { padding: 6px 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 13px; width: 260px; }
+    .filters select { padding: 6px 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 13px; background: #fff; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e5e5; font-size: 11px; color: #888; font-weight: 500; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafafa; }
+    .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
+    .badge.ok     { background: #E1F5EE; color: #0F6E56; }
+    .badge.warn   { background: #FAEEDA; color: #854F0B; }
+    .badge.danger { background: #FCEBEB; color: #A32D2D; }
+    .pct-bar { width: 80px; height: 6px; background: #f0f0f0; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 6px; }
+    .pct-fill { height: 6px; border-radius: 3px; background: #1D9E75; }
+    #count { font-size: 12px; color: #888; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Projeto São Paulo — AIS 04</h1>
+  <span id="atualizado"></span>
+</header>
+
+<div class="container">
+
+  <div class="cards">
+    <div class="card"><label>Total de tarefas</label><strong id="total">-</strong></div>
+    <div class="card verde"><label>Concluídas</label><strong id="concluidas">-</strong></div>
+    <div class="card amarelo"><label>Em andamento</label><strong id="andamento">-</strong></div>
+    <div class="card vermelho"><label>Não iniciadas</label><strong id="nao_inic">-</strong></div>
+  </div>
+
+  <div class="section">
+    <h2>Progresso geral</h2>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="pct-label">0%</span>
+        <span style="font-size:12px;color:#888">meta: 100%</span>
+      </div>
+      <div class="progress-bg"><div class="progress-fill" id="pct-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Tarefas</h2>
+    <div class="filters">
+      <input type="text" id="busca" placeholder="Buscar tarefa ou responsável...">
+      <select id="filtro-status">
+        <option value="">Todos os status</option>
+        <option value="Concluída">Concluídas</option>
+        <option value="Em andamento">Em andamento</option>
+        <option value="Não iniciada">Não iniciadas</option>
+      </select>
+    </div>
+    <div id="count"></div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40%">Tarefa</th>
+          <th style="width:16%">Responsável</th>
+          <th style="width:11%">Início</th>
+          <th style="width:11%">Fim</th>
+          <th style="width:14%">Progresso</th>
+          <th style="width:8%">Status</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+let todasTarefas = [];
+
+fetch('saopaulo.json')
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('atualizado').textContent = 'Atualizado em ' + data.atualizado;
+    document.getElementById('total').textContent = data.total;
+    document.getElementById('concluidas').textContent = data.concluidas;
+    document.getElementById('andamento').textContent = data.andamento;
+    document.getElementById('nao_inic').textContent = data.nao_inic;
+    document.getElementById('pct-label').textContent = data.pct_medio + '%';
+    document.getElementById('pct-bar').style.width = data.pct_medio + '%';
+
+    todasTarefas = data.tarefas;
+    renderizar(todasTarefas);
+  });
+
+function badgeClass(status) {
+  if (status === 'Concluída') return 'ok';
+  if (status === 'Em andamento') return 'warn';
+  return 'danger';
+}
+
+function renderizar(tarefas) {
+  const tbody = document.getElementById('tbody');
+  document.getElementById('count').textContent = tarefas.length + ' tarefas encontradas';
+  tbody.innerHTML = tarefas.map(t => `
+    <tr>
+      <td style="padding-left:${(t.nivel - 1) * 16 + 12}px">${t.nome}</td>
+      <td>${t.responsavel}</td>
+      <td>${t.inicio}</td>
+      <td>${t.fim}</td>
+      <td>
+        <span class="pct-bar"><span class="pct-fill" style="width:${t.percentual}%"></span></span>
+        ${Math.round(t.percentual)}%
+      </td>
+      <td><span class="badge ${badgeClass(t.status)}">${t.status}</span></td>
+    </tr>
+  `).join('');
+}
+
+function filtrar() {
+  const busca  = document.getElementById('busca').value.toLowerCase();
+  const status = document.getElementById('filtro-status').value;
+  const result = todasTarefas.filter(t =>
+    (!busca  || t.nome.toLowerCase().includes(busca) || t.responsavel.toLowerCase().includes(busca)) &&
+    (!status || t.status === status)
+  );
+  renderizar(result);
+}
+
+document.getElementById('busca').addEventListener('input', filtrar);
+document.getElementById('filtro-status').addEventListener('change', filtrar);
+</script>
+</body>
+</html>
