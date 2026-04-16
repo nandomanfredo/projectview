@@ -3,74 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projeto São Paulo</title>
+  <title>agnes | São Paulo — AIS 04</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; }
-    header { background: #fff; border-bottom: 1px solid #e5e5e5; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
-    header h1 { font-size: 18px; font-weight: 600; }
-    header span { font-size: 12px; color: #888; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
-    .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
-    .card { background: #fff; border-radius: 8px; border: 1px solid #e5e5e5; padding: 16px; }
-    .card label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
-    .card strong { font-size: 26px; font-weight: 600; }
-    .card.verde strong { color: #1D9E75; }
-    .card.amarelo strong { color: #BA7517; }
-    .card.vermelho strong { color: #E24B4A; }
-    .section { background: #fff; border-radius: 8px; border: 1px solid #e5e5e5; padding: 20px; margin-bottom: 20px; }
-    .section h2 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
-    .progress-wrap { margin-bottom: 12px; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
-    .progress-bg { background: #f0f0f0; border-radius: 4px; height: 8px; }
-    .progress-fill { height: 8px; border-radius: 4px; background: #1D9E75; }
-    .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-    .filters input { padding: 6px 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 13px; width: 260px; }
-    .filters select { padding: 6px 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 13px; background: #fff; }
-    table { width: 100%; border-collapse: collapse; font-size: 13px; }
-    th { text-align: left; padding: 8px 12px; border-bottom: 1px solid #e5e5e5; font-size: 11px; color: #888; font-weight: 500; }
-    td { padding: 10px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #fafafa; }
-    .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 500; }
-    .badge.ok     { background: #E1F5EE; color: #0F6E56; }
-    .badge.warn   { background: #FAEEDA; color: #854F0B; }
-    .badge.danger { background: #FCEBEB; color: #A32D2D; }
-    .pct-bar { width: 80px; height: 6px; background: #f0f0f0; border-radius: 3px; display: inline-block; vertical-align: middle; margin-right: 6px; }
-    .pct-fill { height: 6px; border-radius: 3px; background: #1D9E75; }
-    #count { font-size: 12px; color: #888; margin-bottom: 8px; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#F8F7FC;--surface:#FFFFFF;--surface2:#F3F0FA;--border:#E8E2F5;--border2:#C9C0E0;
+      --text:#1A1525;--text2:#5A5070;--text3:#9490A8;
+      --blue:#6D28D9;--blue-light:#EDE9FE;--blue-dark:#4C1D95;
+      --green:#059669;--green-light:#D1FAE5;
+      --amber:#B45309;--amber-light:#FEF3C7;
+      --red:#B91C1C;--red-light:#FEE2E2;
+      --teal:#0D9488;--teal-light:#CCFBF1;
+      --agnes-green:#10B981;
+      --radius:10px;--radius-sm:6px;--radius-lg:14px;
+      --shadow:0 1px 3px rgba(109,40,217,.06),0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:0 4px 12px rgba(109,40,217,.10),0 1px 3px rgba(0,0,0,.05);
+    }
+    body{font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);background:var(--bg);line-height:1.5}
+
+    /* Topbar */
+    .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:0 1px 0 var(--border),0 2px 8px rgba(109,40,217,.04)}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo-badge{background:linear-gradient(135deg,#6D28D9,#4C1D95);padding:5px 12px;border-radius:8px;display:flex;align-items:center}
+    .logo-badge img{height:22px;width:auto;display:block}
+    .logo-sep{color:var(--border2);font-weight:300;font-size:18px}
+    .logo-label{font-weight:500;font-size:13px;color:var(--text2);letter-spacing:.2px}
+    .topbar-right{font-size:12px;color:var(--text3)}
+
+    /* Layout */
+    .main{max-width:1200px;margin:0 auto;padding:28px}
+
+    /* Metric cards */
+    .metrics-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+    .metric-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 22px;box-shadow:var(--shadow);transition:box-shadow .2s,transform .2s}
+    .metric-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+    .metric-label{font-size:11px;color:var(--text3);font-weight:500;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+    .metric-value{font-size:26px;font-weight:600;line-height:1.1;color:var(--text)}
+    .metric-value.verde{color:var(--teal)}
+    .metric-value.amarelo{color:var(--amber)}
+    .metric-value.vermelho{color:var(--red)}
+
+    /* Sections */
+    .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:18px;box-shadow:var(--shadow)}
+    .section-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+
+    /* Progress */
+    .progress-row{display:flex;align-items:center;gap:12px}
+    .progress-pct{font-size:22px;font-weight:700;color:var(--blue);min-width:52px}
+    .progress-bar-bg{flex:1;height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
+    .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--agnes-green));border-radius:4px;transition:width .4s}
+    .progress-meta{font-size:12px;color:var(--text3);min-width:60px;text-align:right}
+
+    /* Filters */
+    .filter-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+    .filter-row input{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--surface);outline:none;width:260px;transition:border-color .15s}
+    .filter-row input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(109,40,217,.08)}
+    .filter-row select{padding:7px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--surface);outline:none;transition:border-color .15s}
+    .filter-row select:focus{border-color:var(--blue)}
+    #count{font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px;font-weight:500}
+
+    /* Table */
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th{font-size:11px;font-weight:600;color:var(--text3);text-align:left;padding:9px 14px;border-bottom:1px solid var(--border);white-space:nowrap;text-transform:uppercase;letter-spacing:.4px}
+    td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:var(--surface2)}
+
+    /* Pills/badges */
+    .pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+    .pill-green{background:var(--green-light);color:var(--teal)}
+    .pill-amber{background:var(--amber-light);color:var(--amber)}
+    .pill-red{background:var(--red-light);color:var(--red)}
+
+    /* Mini progress bar (tasks) */
+    .pct-bar{width:80px;height:5px;background:var(--surface2);border-radius:3px;display:inline-block;vertical-align:middle;margin-right:6px;overflow:hidden}
+    .pct-fill{height:5px;border-radius:3px;background:var(--blue)}
+
+    /* Histórico */
+    .hist-item{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden}
+    .hist-header{display:flex;align-items:center;gap:16px;padding:12px 16px;cursor:pointer;user-select:none;transition:background .15s}
+    .hist-header:hover{background:var(--surface2)}
+    .hist-data{font-size:12px;color:var(--text3);min-width:110px}
+    .hist-pct{display:flex;align-items:center;gap:8px;flex:1}
+    .hist-pct-text{font-size:13px;font-weight:600}
+    .hist-pct-arrow{font-size:12px;color:var(--text3)}
+    .hist-mini-bar{flex:1;max-width:160px;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+    .hist-mini-fill{height:5px;border-radius:3px;background:linear-gradient(90deg,var(--blue),var(--agnes-green));transition:width .3s}
+    .hist-badge-wrap{display:flex;gap:6px}
+    .hist-count{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600}
+    .hist-count.avanco  {background:var(--green-light);color:var(--teal)}
+    .hist-count.reducao {background:var(--red-light);color:var(--red)}
+    .hist-count.nova    {background:var(--blue-light);color:var(--blue-dark)}
+    .hist-count.removida{background:var(--amber-light);color:var(--amber)}
+    .hist-count.neutro  {background:var(--surface2);color:var(--text3)}
+    .hist-toggle{font-size:16px;color:var(--text3);margin-left:auto;transition:transform .2s;display:inline-block}
+    .hist-toggle.open{transform:rotate(180deg)}
+    .hist-detail{display:none;border-top:1px solid var(--border)}
+    .hist-detail.open{display:block}
+    .hist-detail table{font-size:12px}
+    .hist-detail th{font-size:10px}
+    .tipo-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;flex-shrink:0}
+    .tipo-dot.avanco  {background:var(--agnes-green)}
+    .tipo-dot.reducao {background:var(--red)}
+    .tipo-dot.nova    {background:var(--blue)}
+    .tipo-dot.removida{background:var(--amber)}
+    .sem-mudancas{font-size:12px;color:var(--text3);padding:12px 16px}
+
+    @media(max-width:768px){
+      .metrics-grid{grid-template-columns:1fr 1fr}
+      .main{padding:16px}
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>Projeto São Paulo — AIS 04</h1>
-  <span id="atualizado"></span>
-</header>
-
-<div class="container">
-
-  <div class="cards">
-    <div class="card"><label>Total de tarefas</label><strong id="total">-</strong></div>
-    <div class="card verde"><label>Concluídas</label><strong id="concluidas">-</strong></div>
-    <div class="card amarelo"><label>Em andamento</label><strong id="andamento">-</strong></div>
-    <div class="card vermelho"><label>Não iniciadas</label><strong id="nao_inic">-</strong></div>
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-badge">
+      <img src="../agnes-logo.png" alt="agnes">
+    </div>
+    <span class="logo-sep">|</span>
+    <span class="logo-label">ProjectView</span>
   </div>
+  <div class="topbar-right">
+    São Paulo — AIS 04 &nbsp;·&nbsp; <span id="atualizado"></span>
+  </div>
+</div>
 
-  <div class="section">
-    <h2>Progresso geral</h2>
-    <div class="progress-wrap">
-      <div class="progress-label">
-        <span id="pct-label">0%</span>
-        <span style="font-size:12px;color:#888">meta: 100%</span>
-      </div>
-      <div class="progress-bg"><div class="progress-fill" id="pct-bar" style="width:0%"></div></div>
+<div class="main">
+
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">Total de tarefas</div>
+      <div class="metric-value" id="total">-</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Concluídas</div>
+      <div class="metric-value verde" id="concluidas">-</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Em andamento</div>
+      <div class="metric-value amarelo" id="andamento">-</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Não iniciadas</div>
+      <div class="metric-value vermelho" id="nao_inic">-</div>
     </div>
   </div>
 
   <div class="section">
-    <h2>Tarefas</h2>
-    <div class="filters">
+    <div class="section-title">Progresso geral</div>
+    <div class="progress-row">
+      <span class="progress-pct" id="pct-label">0%</span>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="pct-bar" style="width:0%"></div>
+      </div>
+      <span class="progress-meta">meta: 100%</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Tarefas</div>
+    <div class="filter-row">
       <input type="text" id="busca" placeholder="Buscar tarefa ou responsável...">
       <select id="filtro-status">
         <option value="">Todos os status</option>
@@ -80,19 +176,26 @@
       </select>
     </div>
     <div id="count"></div>
-    <table>
-      <thead>
-        <tr>
-          <th style="width:40%">Tarefa</th>
-          <th style="width:16%">Responsável</th>
-          <th style="width:11%">Início</th>
-          <th style="width:11%">Fim</th>
-          <th style="width:14%">Progresso</th>
-          <th style="width:8%">Status</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:40%">Tarefa</th>
+            <th style="width:16%">Responsável</th>
+            <th style="width:11%">Início</th>
+            <th style="width:11%">Fim</th>
+            <th style="width:14%">Progresso</th>
+            <th style="width:8%">Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Histórico de atualizações</div>
+    <div id="historico-wrap"><p class="sem-mudancas">Carregando histórico...</p></div>
   </div>
 
 </div>
@@ -104,21 +207,20 @@ fetch('saopaulo.json')
   .then(r => r.json())
   .then(data => {
     document.getElementById('atualizado').textContent = 'Atualizado em ' + data.atualizado;
-    document.getElementById('total').textContent = data.total;
+    document.getElementById('total').textContent      = data.total;
     document.getElementById('concluidas').textContent = data.concluidas;
-    document.getElementById('andamento').textContent = data.andamento;
-    document.getElementById('nao_inic').textContent = data.nao_inic;
-    document.getElementById('pct-label').textContent = data.pct_medio + '%';
-    document.getElementById('pct-bar').style.width = data.pct_medio + '%';
-
+    document.getElementById('andamento').textContent  = data.andamento;
+    document.getElementById('nao_inic').textContent   = data.nao_inic;
+    document.getElementById('pct-label').textContent  = data.pct_medio + '%';
+    document.getElementById('pct-bar').style.width    = data.pct_medio + '%';
     todasTarefas = data.tarefas;
     renderizar(todasTarefas);
   });
 
-function badgeClass(status) {
-  if (status === 'Concluída') return 'ok';
-  if (status === 'Em andamento') return 'warn';
-  return 'danger';
+function pillClass(status) {
+  if (status === 'Concluída')    return 'pill-green';
+  if (status === 'Em andamento') return 'pill-amber';
+  return 'pill-red';
 }
 
 function renderizar(tarefas) {
@@ -126,15 +228,17 @@ function renderizar(tarefas) {
   document.getElementById('count').textContent = tarefas.length + ' tarefas encontradas';
   tbody.innerHTML = tarefas.map(t => `
     <tr>
-      <td style="padding-left:${(t.nivel - 1) * 16 + 12}px">${t.nome}</td>
-      <td>${t.responsavel}</td>
-      <td>${t.inicio}</td>
-      <td>${t.fim}</td>
+      <td style="padding-left:${(t.nivel - 1) * 16 + 14}px">${t.nome}</td>
+      <td style="color:var(--text2)">${t.responsavel}</td>
+      <td style="color:var(--text3)">${t.inicio}</td>
+      <td style="color:var(--text3)">${t.fim}</td>
       <td>
-        <span class="pct-bar"><span class="pct-fill" style="width:${t.percentual}%"></span></span>
-        ${Math.round(t.percentual)}%
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="pct-bar"><span class="pct-fill" style="width:${t.percentual}%"></span></span>
+          <span style="font-size:12px;color:var(--text2)">${Math.round(t.percentual)}%</span>
+        </div>
       </td>
-      <td><span class="badge ${badgeClass(t.status)}">${t.status}</span></td>
+      <td><span class="pill ${pillClass(t.status)}">${t.status}</span></td>
     </tr>
   `).join('');
 }
@@ -151,6 +255,92 @@ function filtrar() {
 
 document.getElementById('busca').addEventListener('input', filtrar);
 document.getElementById('filtro-status').addEventListener('change', filtrar);
+
+// --- Histórico ---
+fetch('historico.json')
+  .then(r => r.json())
+  .then(hist => renderHistorico(hist))
+  .catch(() => {
+    document.getElementById('historico-wrap').innerHTML =
+      '<p class="sem-mudancas">Nenhum histórico encontrado. Execute o script para gerar.</p>';
+  });
+
+function contarTipos(mudancas) {
+  const c = { avanco: 0, reducao: 0, nova: 0, removida: 0 };
+  mudancas.forEach(m => { if (c[m.tipo] !== undefined) c[m.tipo]++; });
+  return c;
+}
+
+function renderHistorico(hist) {
+  const wrap = document.getElementById('historico-wrap');
+  if (!hist.length) {
+    wrap.innerHTML = '<p class="sem-mudancas">Sem registros ainda.</p>';
+    return;
+  }
+
+  wrap.innerHTML = hist.map((h, i) => {
+    const tipos = contarTipos(h.mudancas);
+    const badges = [
+      tipos.avanco   ? `<span class="hist-count avanco">▲ ${tipos.avanco} avanço${tipos.avanco > 1 ? 's' : ''}</span>` : '',
+      tipos.reducao  ? `<span class="hist-count reducao">▼ ${tipos.reducao} redução${tipos.reducao > 1 ? 'ões' : ''}</span>` : '',
+      tipos.nova     ? `<span class="hist-count nova">+ ${tipos.nova} nova${tipos.nova > 1 ? 's' : ''}</span>` : '',
+      tipos.removida ? `<span class="hist-count removida">− ${tipos.removida} removida${tipos.removida > 1 ? 's' : ''}</span>` : '',
+    ].filter(Boolean).join('');
+
+    const pctAntes  = h.pct_antes !== null && h.pct_antes !== undefined ? h.pct_antes + '%' : '—';
+    const pctDepois = h.pct_depois + '%';
+
+    const linhas = h.mudancas.length
+      ? h.mudancas.map(m => `
+          <tr>
+            <td style="padding-left:16px;display:flex;align-items:center">
+              <span class="tipo-dot ${m.tipo}"></span>${m.tarefa}
+            </td>
+            <td>${m.detalhe}</td>
+            <td style="color:var(--text3)">${m.status_antes  || '—'}</td>
+            <td style="color:var(--text2)">${m.status_depois || '—'}</td>
+          </tr>`).join('')
+      : `<tr><td colspan="4" class="sem-mudancas">Nenhuma mudança detectada nesta atualização.</td></tr>`;
+
+    return `
+      <div class="hist-item">
+        <div class="hist-header" onclick="toggleHist(${i})">
+          <span class="hist-data">${h.data}</span>
+          <div class="hist-pct">
+            <span class="hist-pct-text" style="color:var(--text3)">${pctAntes}</span>
+            <span class="hist-pct-arrow">→</span>
+            <span class="hist-pct-text" style="color:var(--blue)">${pctDepois}</span>
+            <div class="hist-mini-bar"><div class="hist-mini-fill" style="width:${h.pct_depois}%"></div></div>
+          </div>
+          <div class="hist-badge-wrap">
+            ${badges || '<span class="hist-count neutro">Sem mudanças</span>'}
+          </div>
+          <span class="hist-toggle" id="toggle-${i}">&#8964;</span>
+        </div>
+        <div class="hist-detail" id="detail-${i}">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:50%">Tarefa</th>
+                <th style="width:20%">Progresso</th>
+                <th style="width:15%">Status antes</th>
+                <th style="width:15%">Status depois</th>
+              </tr>
+            </thead>
+            <tbody>${linhas}</tbody>
+          </table>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleHist(i) {
+  const detail = document.getElementById('detail-' + i);
+  const toggle = document.getElementById('toggle-' + i);
+  const isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  toggle.classList.toggle('open', !isOpen);
+}
 </script>
 </body>
 </html>
