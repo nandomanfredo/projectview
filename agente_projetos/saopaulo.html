@@ -6,6 +6,7 @@
   <title>agnes | São Paulo — AIS 04</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     :root{
@@ -32,6 +33,12 @@
     .logo-label{font-weight:500;font-size:13px;color:var(--text2);letter-spacing:.2px}
     .topbar-right{font-size:12px;color:var(--text3)}
 
+    /* Tab nav */
+    .tab-nav{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 28px}
+    .tab-btn{padding:12px 18px;font-size:13px;font-family:'DM Sans',sans-serif;background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--text2);font-weight:500;transition:all .18s}
+    .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+    .tab-btn:hover:not(.active){color:var(--text);background:var(--surface2)}
+
     /* Layout */
     .main{max-width:1200px;margin:0 auto;padding:28px}
 
@@ -44,6 +51,7 @@
     .metric-value.verde{color:var(--teal)}
     .metric-value.amarelo{color:var(--amber)}
     .metric-value.vermelho{color:var(--red)}
+    .metric-sub{font-size:11px;color:var(--text3);margin-top:4px}
 
     /* Sections */
     .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;margin-bottom:18px;box-shadow:var(--shadow)}
@@ -76,10 +84,32 @@
     .pill-green{background:var(--green-light);color:var(--teal)}
     .pill-amber{background:var(--amber-light);color:var(--amber)}
     .pill-red{background:var(--red-light);color:var(--red)}
+    .pill-blue{background:var(--blue-light);color:var(--blue-dark)}
 
     /* Mini progress bar (tasks) */
     .pct-bar{width:80px;height:5px;background:var(--surface2);border-radius:3px;display:inline-block;vertical-align:middle;margin-right:6px;overflow:hidden}
     .pct-fill{height:5px;border-radius:3px;background:var(--blue)}
+
+    /* Dashboard charts grid */
+    .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
+    .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;box-shadow:var(--shadow)}
+    .chart-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:16px}
+    .chart-wrap{position:relative;height:280px}
+    .chart-wrap.tall{height:340px}
+
+    /* Insights estratégicos */
+    .insights-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .insight-card{border-radius:var(--radius-sm);padding:16px;border-left:3px solid transparent}
+    .insight-card.ok    {background:#F0FDF9;border-left-color:var(--agnes-green)}
+    .insight-card.warn  {background:var(--amber-light);border-left-color:var(--amber)}
+    .insight-card.danger{background:var(--red-light);border-left-color:var(--red)}
+    .insight-card.info  {background:var(--blue-light);border-left-color:var(--blue)}
+    .insight-title{font-size:12px;font-weight:700;margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+    .insight-card.ok     .insight-title{color:var(--teal)}
+    .insight-card.warn   .insight-title{color:var(--amber)}
+    .insight-card.danger .insight-title{color:var(--red)}
+    .insight-card.info   .insight-title{color:var(--blue-dark)}
+    .insight-body{font-size:13px;color:var(--text2);line-height:1.6}
 
     /* Histórico */
     .hist-item{border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden}
@@ -111,8 +141,10 @@
     .tipo-dot.removida{background:var(--amber)}
     .sem-mudancas{font-size:12px;color:var(--text3);padding:12px 16px}
 
-    @media(max-width:768px){
+    @media(max-width:900px){
       .metrics-grid{grid-template-columns:1fr 1fr}
+      .charts-row{grid-template-columns:1fr}
+      .insights-grid{grid-template-columns:1fr}
       .main{padding:16px}
     }
   </style>
@@ -132,7 +164,13 @@
   </div>
 </div>
 
-<div class="main">
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('tarefas', this)">Tarefas</button>
+  <button class="tab-btn" onclick="showTab('dashboard', this)">Dashboard</button>
+</div>
+
+<!-- ======== ABA TAREFAS ======== -->
+<div id="tab-tarefas" class="main">
 
   <div class="metrics-grid">
     <div class="metric-card">
@@ -200,12 +238,86 @@
 
 </div>
 
+<!-- ======== ABA DASHBOARD ======== -->
+<div id="tab-dashboard" class="main" style="display:none">
+
+  <!-- Insight metric cards -->
+  <div class="metrics-grid" id="dash-cards"></div>
+
+  <!-- Linha 1: Distribuição de status + Progresso por fase -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Distribuição de status</div>
+      <div class="chart-wrap"><canvas id="chart-donut"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Progresso por fase (EDT)</div>
+      <div class="chart-wrap"><canvas id="chart-fases"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Linha 2: Carga por recurso + Cronograma de início -->
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Carga de trabalho por recurso — top 10</div>
+      <div class="chart-wrap tall"><canvas id="chart-recursos"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Densidade de tarefas por mês de início</div>
+      <div class="chart-wrap tall"><canvas id="chart-cronograma"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Insights estratégicos -->
+  <div class="section">
+    <div class="section-title">Insights estratégicos</div>
+    <div class="insights-grid" id="insights-grid"></div>
+  </div>
+
+</div>
+
 <script>
+// ─── Chart.js defaults ────────────────────────────────────────────────────────
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size   = 12;
+Chart.defaults.color       = '#9490A8';
+
+// ─── Plugin: texto central no donut ──────────────────────────────────────────
+Chart.register({
+  id: 'centerLabel',
+  afterDraw(chart) {
+    if (chart.config.type !== 'doughnut' || !chart.config.options.centerLabel) return;
+    const { ctx, chartArea: { top, bottom, left, right } } = chart;
+    const cx = (left + right) / 2, cy = (top + bottom) / 2;
+    ctx.save();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = 'bold 22px DM Sans'; ctx.fillStyle = '#1A1525';
+    ctx.fillText(chart.config.options.centerLabel.value, cx, cy - 9);
+    ctx.font = '11px DM Sans'; ctx.fillStyle = '#9490A8';
+    ctx.fillText(chart.config.options.centerLabel.sub, cx, cy + 12);
+    ctx.restore();
+  }
+});
+
+// ─── Tab navigation ──────────────────────────────────────────────────────────
+function showTab(name, btn) {
+  document.querySelectorAll('.main').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).style.display = 'block';
+  btn.classList.add('active');
+}
+
+// ─── Shared data ─────────────────────────────────────────────────────────────
 let todasTarefas = [];
+let dadosJson    = null;
 
 fetch('saopaulo.json')
   .then(r => r.json())
   .then(data => {
+    dadosJson = data;
+    todasTarefas = data.tarefas;
+
+    // Aba tarefas
     document.getElementById('atualizado').textContent = 'Atualizado em ' + data.atualizado;
     document.getElementById('total').textContent      = data.total;
     document.getElementById('concluidas').textContent = data.concluidas;
@@ -213,10 +325,13 @@ fetch('saopaulo.json')
     document.getElementById('nao_inic').textContent   = data.nao_inic;
     document.getElementById('pct-label').textContent  = data.pct_medio + '%';
     document.getElementById('pct-bar').style.width    = data.pct_medio + '%';
-    todasTarefas = data.tarefas;
     renderizar(todasTarefas);
+
+    // Dashboard (renderiza só quando a aba for aberta pela 1ª vez)
+    buildDashboard(data);
   });
 
+// ─── Aba Tarefas ─────────────────────────────────────────────────────────────
 function pillClass(status) {
   if (status === 'Concluída')    return 'pill-green';
   if (status === 'Em andamento') return 'pill-amber';
@@ -224,9 +339,8 @@ function pillClass(status) {
 }
 
 function renderizar(tarefas) {
-  const tbody = document.getElementById('tbody');
   document.getElementById('count').textContent = tarefas.length + ' tarefas encontradas';
-  tbody.innerHTML = tarefas.map(t => `
+  document.getElementById('tbody').innerHTML = tarefas.map(t => `
     <tr>
       <td style="padding-left:${(t.nivel - 1) * 16 + 14}px">${t.nome}</td>
       <td style="color:var(--text2)">${t.responsavel}</td>
@@ -246,20 +360,19 @@ function renderizar(tarefas) {
 function filtrar() {
   const busca  = document.getElementById('busca').value.toLowerCase();
   const status = document.getElementById('filtro-status').value;
-  const result = todasTarefas.filter(t =>
+  renderizar(todasTarefas.filter(t =>
     (!busca  || t.nome.toLowerCase().includes(busca) || t.responsavel.toLowerCase().includes(busca)) &&
     (!status || t.status === status)
-  );
-  renderizar(result);
+  ));
 }
 
 document.getElementById('busca').addEventListener('input', filtrar);
 document.getElementById('filtro-status').addEventListener('change', filtrar);
 
-// --- Histórico ---
+// ─── Histórico ───────────────────────────────────────────────────────────────
 fetch('historico.json')
   .then(r => r.json())
-  .then(hist => renderHistorico(hist))
+  .then(renderHistorico)
   .catch(() => {
     document.getElementById('historico-wrap').innerHTML =
       '<p class="sem-mudancas">Nenhum histórico encontrado. Execute o script para gerar.</p>';
@@ -273,73 +386,317 @@ function contarTipos(mudancas) {
 
 function renderHistorico(hist) {
   const wrap = document.getElementById('historico-wrap');
-  if (!hist.length) {
-    wrap.innerHTML = '<p class="sem-mudancas">Sem registros ainda.</p>';
-    return;
-  }
+  if (!hist.length) { wrap.innerHTML = '<p class="sem-mudancas">Sem registros ainda.</p>'; return; }
 
   wrap.innerHTML = hist.map((h, i) => {
-    const tipos = contarTipos(h.mudancas);
+    const tipos  = contarTipos(h.mudancas);
     const badges = [
-      tipos.avanco   ? `<span class="hist-count avanco">▲ ${tipos.avanco} avanço${tipos.avanco > 1 ? 's' : ''}</span>` : '',
-      tipos.reducao  ? `<span class="hist-count reducao">▼ ${tipos.reducao} redução${tipos.reducao > 1 ? 'ões' : ''}</span>` : '',
-      tipos.nova     ? `<span class="hist-count nova">+ ${tipos.nova} nova${tipos.nova > 1 ? 's' : ''}</span>` : '',
-      tipos.removida ? `<span class="hist-count removida">− ${tipos.removida} removida${tipos.removida > 1 ? 's' : ''}</span>` : '',
+      tipos.avanco   ? `<span class="hist-count avanco">▲ ${tipos.avanco} avanço${tipos.avanco>1?'s':''}</span>` : '',
+      tipos.reducao  ? `<span class="hist-count reducao">▼ ${tipos.reducao} redução${tipos.reducao>1?'ões':''}</span>` : '',
+      tipos.nova     ? `<span class="hist-count nova">+ ${tipos.nova} nova${tipos.nova>1?'s':''}</span>` : '',
+      tipos.removida ? `<span class="hist-count removida">− ${tipos.removida} removida${tipos.removida>1?'s':''}</span>` : '',
     ].filter(Boolean).join('');
+    const pctAntes  = h.pct_antes != null ? h.pct_antes + '%' : '—';
+    const linhas    = h.mudancas.length
+      ? h.mudancas.map(m => `<tr>
+          <td style="padding-left:16px;display:flex;align-items:center">
+            <span class="tipo-dot ${m.tipo}"></span>${m.tarefa}
+          </td>
+          <td>${m.detalhe}</td>
+          <td style="color:var(--text3)">${m.status_antes||'—'}</td>
+          <td style="color:var(--text2)">${m.status_depois||'—'}</td>
+        </tr>`).join('')
+      : `<tr><td colspan="4" class="sem-mudancas">Nenhuma mudança detectada.</td></tr>`;
 
-    const pctAntes  = h.pct_antes !== null && h.pct_antes !== undefined ? h.pct_antes + '%' : '—';
-    const pctDepois = h.pct_depois + '%';
-
-    const linhas = h.mudancas.length
-      ? h.mudancas.map(m => `
-          <tr>
-            <td style="padding-left:16px;display:flex;align-items:center">
-              <span class="tipo-dot ${m.tipo}"></span>${m.tarefa}
-            </td>
-            <td>${m.detalhe}</td>
-            <td style="color:var(--text3)">${m.status_antes  || '—'}</td>
-            <td style="color:var(--text2)">${m.status_depois || '—'}</td>
-          </tr>`).join('')
-      : `<tr><td colspan="4" class="sem-mudancas">Nenhuma mudança detectada nesta atualização.</td></tr>`;
-
-    return `
-      <div class="hist-item">
-        <div class="hist-header" onclick="toggleHist(${i})">
-          <span class="hist-data">${h.data}</span>
-          <div class="hist-pct">
-            <span class="hist-pct-text" style="color:var(--text3)">${pctAntes}</span>
-            <span class="hist-pct-arrow">→</span>
-            <span class="hist-pct-text" style="color:var(--blue)">${pctDepois}</span>
-            <div class="hist-mini-bar"><div class="hist-mini-fill" style="width:${h.pct_depois}%"></div></div>
-          </div>
-          <div class="hist-badge-wrap">
-            ${badges || '<span class="hist-count neutro">Sem mudanças</span>'}
-          </div>
-          <span class="hist-toggle" id="toggle-${i}">&#8964;</span>
+    return `<div class="hist-item">
+      <div class="hist-header" onclick="toggleHist(${i})">
+        <span class="hist-data">${h.data}</span>
+        <div class="hist-pct">
+          <span class="hist-pct-text" style="color:var(--text3)">${pctAntes}</span>
+          <span class="hist-pct-arrow">→</span>
+          <span class="hist-pct-text" style="color:var(--blue)">${h.pct_depois}%</span>
+          <div class="hist-mini-bar"><div class="hist-mini-fill" style="width:${h.pct_depois}%"></div></div>
         </div>
-        <div class="hist-detail" id="detail-${i}">
-          <table>
-            <thead>
-              <tr>
-                <th style="width:50%">Tarefa</th>
-                <th style="width:20%">Progresso</th>
-                <th style="width:15%">Status antes</th>
-                <th style="width:15%">Status depois</th>
-              </tr>
-            </thead>
-            <tbody>${linhas}</tbody>
-          </table>
-        </div>
-      </div>`;
+        <div class="hist-badge-wrap">${badges||'<span class="hist-count neutro">Sem mudanças</span>'}</div>
+        <span class="hist-toggle" id="toggle-${i}">&#8964;</span>
+      </div>
+      <div class="hist-detail" id="detail-${i}">
+        <table><thead><tr>
+          <th style="width:50%">Tarefa</th><th style="width:20%">Progresso</th>
+          <th style="width:15%">Status antes</th><th style="width:15%">Status depois</th>
+        </tr></thead><tbody>${linhas}</tbody></table>
+      </div>
+    </div>`;
   }).join('');
 }
 
 function toggleHist(i) {
-  const detail = document.getElementById('detail-' + i);
-  const toggle = document.getElementById('toggle-' + i);
-  const isOpen = detail.classList.contains('open');
-  detail.classList.toggle('open', !isOpen);
-  toggle.classList.toggle('open', !isOpen);
+  document.getElementById('detail-'+i).classList.toggle('open');
+  document.getElementById('toggle-'+i).classList.toggle('open');
+}
+
+// ─── Dashboard ───────────────────────────────────────────────────────────────
+function buildDashboard(data) {
+  const tarefas = data.tarefas;
+  const hoje    = new Date().toISOString().slice(0, 10);
+
+  // Health check
+  const atrasadas = tarefas.filter(t => t.fim !== '-' && t.fim < hoje && t.percentual < 100);
+  const criterio  = tarefas.filter(t => t.inicio !== '-' && t.inicio < hoje && t.percentual === 0);
+
+  // Recursos — split por ', ' depois por '/'
+  const recursos = {};
+  tarefas.forEach(t => {
+    if (t.responsavel && t.responsavel !== '-') {
+      t.responsavel.split(', ').forEach(r =>
+        r.split('/').forEach(rr => {
+          const n = rr.trim();
+          if (n) recursos[n] = (recursos[n] || 0) + 1;
+        })
+      );
+    }
+  });
+  const topRecursos = Object.entries(recursos).sort((a, b) => b[1] - a[1]).slice(0, 10);
+
+  // EDT fases (nivel 2)
+  const fases = [];
+  let faseAtual = null;
+  tarefas.forEach(t => {
+    if (t.nivel === 2) {
+      faseAtual = { nome: t.nome, filhos: [], propria: t.percentual };
+      fases.push(faseAtual);
+    } else if (faseAtual && t.nivel > 2) {
+      faseAtual.filhos.push(t);
+    }
+  });
+  const fasesPct = fases.map(f => ({
+    nome: f.nome.length > 38 ? f.nome.substring(0, 35) + '...' : f.nome,
+    pct:  f.filhos.length > 0
+      ? Math.round(f.filhos.reduce((s, t) => s + t.percentual, 0) / f.filhos.length)
+      : Math.round(f.propria)
+  }));
+
+  // Cronograma — tarefas por mês de início (nivel >= 3)
+  const mesesMap = {};
+  tarefas.filter(t => t.nivel >= 3 && t.inicio !== '-').forEach(t => {
+    const m = t.inicio.substring(0, 7);
+    mesesMap[m] = (mesesMap[m] || 0) + 1;
+  });
+  const mesesOrdenados = Object.keys(mesesMap).sort();
+  const mesesLabels    = mesesOrdenados.map(m => {
+    const [y, mo] = m.split('-');
+    const nomes   = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+    return nomes[parseInt(mo, 10) - 1] + '/' + y.slice(2);
+  });
+  const mesesCounts = mesesOrdenados.map(m => mesesMap[m]);
+
+  // ── Metric cards do Dashboard ──────────────────────────────────────────────
+  const faseCritica = fasesPct.filter(f => f.pct > 0 && f.pct < 80)
+    .sort((a, b) => a.pct - b.pct)[0];
+
+  document.getElementById('dash-cards').innerHTML = `
+    <div class="metric-card">
+      <div class="metric-label">Progresso médio</div>
+      <div class="metric-value" style="color:var(--blue)">${data.pct_medio}%</div>
+      <div class="metric-sub">${data.total} tarefas no total</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Tarefas atrasadas</div>
+      <div class="metric-value vermelho">${atrasadas.length}</div>
+      <div class="metric-sub">fim passou e não concluídas</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">A critério</div>
+      <div class="metric-value amarelo">${criterio.length}</div>
+      <div class="metric-sub">início passou, 0% concluído</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Recurso mais demandado</div>
+      <div class="metric-value" style="font-size:16px;margin-top:4px">${topRecursos[0]?.[0] || '-'}</div>
+      <div class="metric-sub">${topRecursos[0]?.[1] || 0} tarefas atribuídas</div>
+    </div>
+  `;
+
+  // ── Gráfico 1: Donut ───────────────────────────────────────────────────────
+  new Chart(document.getElementById('chart-donut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Concluídas', 'Em andamento', 'Não iniciadas'],
+      datasets: [{
+        data: [data.concluidas, data.andamento, data.nao_inic],
+        backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+        borderWidth: 2,
+        borderColor: '#fff',
+        hoverOffset: 6
+      }]
+    },
+    options: {
+      cutout: '68%',
+      centerLabel: { value: data.pct_medio + '%', sub: 'progresso' },
+      plugins: {
+        legend: { position: 'bottom', labels: { padding: 16, usePointStyle: true, pointStyleWidth: 8 } }
+      },
+      maintainAspectRatio: false
+    }
+  });
+
+  // ── Gráfico 2: Progresso por fase ─────────────────────────────────────────
+  new Chart(document.getElementById('chart-fases'), {
+    type: 'bar',
+    data: {
+      labels: fasesPct.map(f => f.nome),
+      datasets: [{
+        label: '% concluído',
+        data: fasesPct.map(f => f.pct),
+        backgroundColor: fasesPct.map(f =>
+          f.pct >= 80 ? 'rgba(16,185,129,.8)' :
+          f.pct >= 40 ? 'rgba(245,158,11,.8)' : 'rgba(239,68,68,.8)'
+        ),
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { max: 100, ticks: { callback: v => v + '%' }, grid: { color: '#E8E2F5' } },
+        x: { grid: { display: false }, ticks: { maxRotation: 25, font: { size: 10 } } }
+      }
+    }
+  });
+
+  // ── Gráfico 3: Top recursos (horizontal) ──────────────────────────────────
+  const resLabels = topRecursos.map(([k]) => k);
+  const resData   = topRecursos.map(([, v]) => v);
+  new Chart(document.getElementById('chart-recursos'), {
+    type: 'bar',
+    data: {
+      labels: resLabels,
+      datasets: [{
+        label: 'Tarefas',
+        data: resData,
+        backgroundColor: resData.map((_, i) =>
+          `rgba(109,40,217,${1 - i * 0.07})`
+        ),
+        borderRadius: 4,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#E8E2F5' } },
+        y: { grid: { display: false }, ticks: { font: { size: 11 } } }
+      }
+    }
+  });
+
+  // ── Gráfico 4: Cronograma ─────────────────────────────────────────────────
+  new Chart(document.getElementById('chart-cronograma'), {
+    type: 'bar',
+    data: {
+      labels: mesesLabels,
+      datasets: [{
+        label: 'Tarefas iniciando',
+        data: mesesCounts,
+        backgroundColor: 'rgba(109,40,217,.7)',
+        borderRadius: 3,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { grid: { color: '#E8E2F5' } },
+        x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 10 } } }
+      }
+    }
+  });
+
+  // ── Insights estratégicos ─────────────────────────────────────────────────
+  const riscoCriterio = criterio.length > 50 ? 'danger' : criterio.length > 20 ? 'warn' : 'ok';
+  const riscoAtraso   = atrasadas.length > 20 ? 'danger' : atrasadas.length > 5 ? 'warn' : 'ok';
+
+  const faseOk   = fasesPct.filter(f => f.pct === 100);
+  const fasePct67 = fasesPct.find(f => f.pct >= 50 && f.pct < 100);
+  const faseBaixa = fasesPct.filter(f => f.pct > 0 && f.pct < 50).sort((a, b) => a.pct - b.pct);
+  const faseZero  = fasesPct.filter(f => f.pct === 0);
+
+  document.getElementById('insights-grid').innerHTML = `
+    <div class="insight-card info">
+      <div class="insight-title">Situação atual</div>
+      <div class="insight-body">
+        Projeto com <strong>${data.pct_medio}%</strong> de progresso médio.
+        ${faseOk.length} fase${faseOk.length > 1 ? 's' : ''} concluída${faseOk.length > 1 ? 's' : ''}
+        ${faseOk.length ? '(' + faseOk.map(f => f.nome).join(', ') + ')' : ''}.
+        Esforço atual concentrado na execução das fases operacionais.
+      </div>
+    </div>
+
+    <div class="insight-card ${riscoAtraso}">
+      <div class="insight-title">Tarefas atrasadas</div>
+      <div class="insight-body">
+        <strong>${atrasadas.length} tarefa${atrasadas.length !== 1 ? 's' : ''}</strong>
+        com data de término vencida e execução incompleta.
+        ${atrasadas.length > 0
+          ? 'Requer renegociação de prazo ou realocação de recursos imediata.'
+          : 'Nenhum atraso crítico identificado no momento.'}
+      </div>
+    </div>
+
+    <div class="insight-card ${riscoCriterio}">
+      <div class="insight-title">Tarefas a critério</div>
+      <div class="insight-body">
+        <strong>${criterio.length} tarefa${criterio.length !== 1 ? 's' : ''}</strong>
+        com início previsto no passado e 0% de execução.
+        ${criterio.length > 50
+          ? 'Volume crítico — risco elevado de atraso em cascata nas próximas fases.'
+          : criterio.length > 20
+          ? 'Atenção: mobilização necessária para evitar acúmulo de atrasos.'
+          : 'Volume dentro do esperado para o estágio atual do projeto.'}
+      </div>
+    </div>
+
+    <div class="insight-card warn">
+      <div class="insight-title">Gargalo de recursos</div>
+      <div class="insight-body">
+        <strong>${topRecursos[0]?.[0]}</strong> (${topRecursos[0]?.[1]} tarefas) e
+        <strong>${topRecursos[1]?.[0]}</strong> (${topRecursos[1]?.[1]} tarefas) concentram
+        o maior volume de trabalho. Monitorar sobreposição de datas para evitar sobrecarga.
+      </div>
+    </div>
+
+    ${faseBaixa.length ? `
+    <div class="insight-card warn">
+      <div class="insight-title">Fases em risco</div>
+      <div class="insight-body">
+        ${faseBaixa.map(f => `<strong>${f.nome}</strong> (${f.pct}%)`).join(' · ')}
+        — progresso abaixo de 50%. Recomenda-se revisão de impedimentos e aceleração das entregas.
+      </div>
+    </div>` : ''}
+
+    ${faseZero.length ? `
+    <div class="insight-card danger">
+      <div class="insight-title">Fases não iniciadas</div>
+      <div class="insight-body">
+        ${faseZero.map(f => `<strong>${f.nome}</strong>`).join(' · ')}
+        ainda com 0% de execução. Verificar se há dependências bloqueantes ou necessidade de kick-off formal.
+      </div>
+    </div>` : ''}
+
+    <div class="insight-card info">
+      <div class="insight-title">Pico de execução</div>
+      <div class="insight-body">
+        A densidade do cronograma indica concentração significativa de tarefas em
+        <strong>${mesesLabels[mesesCounts.indexOf(Math.max(...mesesCounts))]}</strong>
+        (${Math.max(...mesesCounts)} tarefas iniciando). Planejar capacidade de equipe para esse período.
+      </div>
+    </div>
+  `;
 }
 </script>
 </body>
