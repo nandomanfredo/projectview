@@ -90,6 +90,21 @@
     .pct-bar{width:80px;height:5px;background:var(--surface2);border-radius:3px;display:inline-block;vertical-align:middle;margin-right:6px;overflow:hidden}
     .pct-fill{height:5px;border-radius:3px;background:var(--blue)}
 
+    /* Tree controls */
+    .tree-controls{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+    .ctrl-btn{padding:5px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;background:var(--surface);color:var(--text2);transition:all .15s;font-weight:500}
+    .ctrl-btn:hover{background:var(--surface2);border-color:var(--border2);color:var(--text)}
+    .ctrl-btn.destaque{background:var(--blue-light);border-color:var(--blue);color:var(--blue-dark)}
+    .ctrl-btn.destaque:hover{background:#DDD6FE}
+
+    /* Tree rows */
+    .row-toggle{cursor:pointer;font-size:9px;color:var(--text3);width:16px;min-width:16px;display:inline-flex;align-items:center;justify-content:center;user-select:none;transition:color .15s}
+    .row-toggle:hover{color:var(--blue)}
+    .row-spacer{width:16px;min-width:16px;display:inline-block}
+    tr.is-parent td{font-weight:600}
+    tr.is-parent td:first-child .task-name{color:var(--text)}
+    tr.is-leaf td:first-child .task-name{color:var(--text2)}
+
     /* Dashboard charts grid */
     .charts-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px}
     .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;box-shadow:var(--shadow)}
@@ -213,6 +228,11 @@
         <option value="Não iniciada">Não iniciadas</option>
       </select>
     </div>
+    <div class="tree-controls" id="tree-controls" style="display:none">
+      <button class="ctrl-btn" onclick="expandAll()">Expandir tudo</button>
+      <button class="ctrl-btn" onclick="collapseAll()">Recolher tudo</button>
+      <button class="ctrl-btn destaque" onclick="recolherConcluidas()">Recolher concluídas</button>
+    </div>
     <div id="count"></div>
     <div style="overflow-x:auto">
       <table>
@@ -314,10 +334,9 @@ let dadosJson    = null;
 fetch('saopaulo.json')
   .then(r => r.json())
   .then(data => {
-    dadosJson = data;
+    dadosJson    = data;
     todasTarefas = data.tarefas;
 
-    // Aba tarefas
     document.getElementById('atualizado').textContent = 'Atualizado em ' + data.atualizado;
     document.getElementById('total').textContent      = data.total;
     document.getElementById('concluidas').textContent = data.concluidas;
@@ -325,24 +344,124 @@ fetch('saopaulo.json')
     document.getElementById('nao_inic').textContent   = data.nao_inic;
     document.getElementById('pct-label').textContent  = data.pct_medio + '%';
     document.getElementById('pct-bar').style.width    = data.pct_medio + '%';
-    renderizar(todasTarefas);
 
-    // Dashboard (renderiza só quando a aba for aberta pela 1ª vez)
+    const temArvore = initTree(data.tarefas);
+    if (temArvore) {
+      document.getElementById('tree-controls').style.display = 'flex';
+      renderTree();
+    } else {
+      renderFlat(data.tarefas);
+    }
+
     buildDashboard(data);
   });
 
-// ─── Aba Tarefas ─────────────────────────────────────────────────────────────
+// ─── Árvore ───────────────────────────────────────────────────────────────────
+let taskMap   = new Map();
+let treeRoots = [];
+let collapsed = new Set();
+
+function initTree(tarefas) {
+  if (!tarefas.length || !('pai' in tarefas[0])) return false;
+  taskMap.clear();
+  treeRoots = [];
+  tarefas.forEach(t => taskMap.set(t.id, { ...t, children: [] }));
+  tarefas.forEach(t => {
+    if (t.pai !== null && t.pai !== undefined && taskMap.has(t.pai)) {
+      taskMap.get(t.pai).children.push(taskMap.get(t.id));
+    } else {
+      treeRoots.push(taskMap.get(t.id));
+    }
+  });
+  return true;
+}
+
+function buildRow(task) {
+  const indent = (task.nivel - 1) * 16 + 6;
+  const toggle = task.resumo
+    ? `<span class="row-toggle" id="tog-${task.id}" onclick="toggleTask('${task.id}')">▼</span>`
+    : `<span class="row-spacer"></span>`;
+  return `
+    <tr id="row-${task.id}" class="${task.resumo ? 'is-parent' : 'is-leaf'}">
+      <td style="padding-left:${indent}px">
+        <div style="display:flex;align-items:center;gap:4px">
+          ${toggle}
+          <span class="task-name">${task.nome}</span>
+        </div>
+      </td>
+      <td style="color:var(--text2)">${task.responsavel}</td>
+      <td style="color:var(--text3)">${task.inicio}</td>
+      <td style="color:var(--text3)">${task.fim}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="pct-bar"><span class="pct-fill" style="width:${task.percentual}%"></span></span>
+          <span style="font-size:12px;color:var(--text2)">${Math.round(task.percentual)}%</span>
+        </div>
+      </td>
+      <td><span class="pill ${pillClass(task.status)}">${task.status}</span></td>
+    </tr>`;
+}
+
+function renderTree() {
+  const rows = [];
+  function traverse(task) {
+    rows.push(buildRow(task));
+    task.children.forEach(c => traverse(c));
+  }
+  treeRoots.forEach(r => traverse(r));
+  document.getElementById('tbody').innerHTML = rows.join('');
+  document.getElementById('count').textContent = taskMap.size + ' tarefas';
+  updateVisibility();
+}
+
+function isVisible(task) {
+  if (!task.pai) return true;
+  if (collapsed.has(task.pai)) return false;
+  const parent = taskMap.get(task.pai);
+  return parent ? isVisible(parent) : true;
+}
+
+function updateVisibility() {
+  taskMap.forEach((task, id) => {
+    const row = document.getElementById('row-' + id);
+    if (!row) return;
+    row.style.display = isVisible(task) ? '' : 'none';
+    if (task.resumo) {
+      const tog = document.getElementById('tog-' + id);
+      if (tog) tog.textContent = collapsed.has(id) ? '▶' : '▼';
+    }
+  });
+}
+
+function toggleTask(id) {
+  collapsed.has(id) ? collapsed.delete(id) : collapsed.add(id);
+  updateVisibility();
+}
+
+function expandAll()  { collapsed.clear(); updateVisibility(); }
+function collapseAll() {
+  taskMap.forEach((t, id) => { if (t.resumo) collapsed.add(id); });
+  updateVisibility();
+}
+function recolherConcluidas() {
+  taskMap.forEach((t, id) => { if (t.resumo && t.status === 'Concluída') collapsed.add(id); });
+  updateVisibility();
+}
+
+// ─── Renderização plana (fallback sem árvore / modo filtro) ──────────────────
 function pillClass(status) {
   if (status === 'Concluída')    return 'pill-green';
   if (status === 'Em andamento') return 'pill-amber';
   return 'pill-red';
 }
 
-function renderizar(tarefas) {
+function renderFlat(tarefas) {
   document.getElementById('count').textContent = tarefas.length + ' tarefas encontradas';
   document.getElementById('tbody').innerHTML = tarefas.map(t => `
-    <tr>
-      <td style="padding-left:${(t.nivel - 1) * 16 + 14}px">${t.nome}</td>
+    <tr class="${t.resumo ? 'is-parent' : 'is-leaf'}">
+      <td style="padding-left:${(t.nivel - 1) * 16 + 14}px">
+        <span class="task-name">${t.nome}</span>
+      </td>
       <td style="color:var(--text2)">${t.responsavel}</td>
       <td style="color:var(--text3)">${t.inicio}</td>
       <td style="color:var(--text3)">${t.fim}</td>
@@ -360,10 +479,36 @@ function renderizar(tarefas) {
 function filtrar() {
   const busca  = document.getElementById('busca').value.toLowerCase();
   const status = document.getElementById('filtro-status').value;
-  renderizar(todasTarefas.filter(t =>
-    (!busca  || t.nome.toLowerCase().includes(busca) || t.responsavel.toLowerCase().includes(busca)) &&
-    (!status || t.status === status)
-  ));
+
+  if (!busca && !status) {
+    // Volta para modo árvore
+    if (taskMap.size > 0) { renderTree(); return; }
+  }
+
+  // Modo filtro flat: mostra tarefas que batem E seus pais (para contexto)
+  const batem = new Set(
+    todasTarefas
+      .filter(t =>
+        (!busca  || t.nome.toLowerCase().includes(busca) || t.responsavel.toLowerCase().includes(busca)) &&
+        (!status || t.status === status)
+      )
+      .map(t => t.id)
+  );
+
+  // Inclui todos os ancestrais das tarefas que batem
+  if (taskMap.size > 0) {
+    [...batem].forEach(id => {
+      let cur = taskMap.get(id);
+      while (cur && cur.pai) {
+        batem.add(cur.pai);
+        cur = taskMap.get(cur.pai);
+      }
+    });
+  }
+
+  const result = todasTarefas.filter(t => batem.has(t.id));
+  document.getElementById('count').textContent = result.length + ' tarefas encontradas';
+  renderFlat(result);
 }
 
 document.getElementById('busca').addEventListener('input', filtrar);

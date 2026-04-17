@@ -26,6 +26,7 @@ for t in projeto.getTasks():
         for r in recursos
         if r.getResource() and r.getResource().getName()
     ) or "-"
+    pai_task = t.getParentTask()
     tarefas.append({
         "id":          str(t.getID()),
         "nome":        nome,
@@ -36,7 +37,9 @@ for t in projeto.getTasks():
         "status":      "Concluída"      if pct == 100
                        else "Em andamento" if pct > 0
                        else "Não iniciada",
-        "nivel":       int(t.getOutlineLevel() or 1)
+        "nivel":       int(t.getOutlineLevel() or 1),
+        "pai":         str(pai_task.getID()) if pai_task else None,
+        "resumo":      bool(t.getSummary()),
     })
 
 saida = {
