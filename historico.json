@@ -1,5 +1,617 @@
 [
   {
+    "data": "17/04/2026 09:05",
+    "pct_antes": 9.4,
+    "pct_depois": 8.3,
+    "concluidas": 81,
+    "andamento": 10,
+    "nao_inic": 915,
+    "total": 1006,
+    "mudancas": [
+      {
+        "tipo": "reducao",
+        "tarefa": "Cronograma SP_07_12_2025",
+        "detalhe": "9% → 8%",
+        "status_antes": "Em andamento",
+        "status_depois": "Em andamento"
+      },
+      {
+        "tipo": "reducao",
+        "tarefa": "PORTARIA RFB 632/2025",
+        "detalhe": "9% → 8%",
+        "status_antes": "Em andamento",
+        "status_depois": "Em andamento"
+      },
+      {
+        "tipo": "reducao",
+        "tarefa": "FRENTES DE TRABALHO -  COMPETÊNCIAS LEGADAS",
+        "detalhe": "7% → 6%",
+        "status_antes": "Em andamento",
+        "status_depois": "Em andamento"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2299 - Desligamento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2298 - Reintegração/Outros Provimentos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Fase IV - Implantação e Operação continua",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Capacitação",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar capacitação - eSocial",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Transmissão dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2200 - Cadastramento Inicial do Vínculo e Admissão/Ingresso de Trabalhador,",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2300 - Trabalhador Sem Vínculo de Emprego/Estatutário - Início",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1010 - Tabela de Rubricas",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1200 - Remuneração de Trabalhador vinculado ao Regime Geral de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1202 - Remuneração de Servidor vinculado ao Regime Próprio de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1210 - Pagamentos de Rendimentos do Trabalho",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2231 - Cessão/Exercício em Outro Órgão",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2230 - Afastamento Temporário",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2299 - Desligamento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2298 - Reintegração/Outros Provimentos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Terceira onda de Implantação ( Anexo - Tabela de Órgãos)",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Fase III - Parametrizações e Customizações",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Estruturação do Sincronismo Agnes Ledger para Transmissão de eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2200 - Cadastramento Inicial do Vínculo e Admissão/Ingresso de Trabalhador,",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2300 - Trabalhador Sem Vínculo de Emprego/Estatutário - Início",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1010 - Tabela de Rubricas",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1200 - Remuneração de Trabalhador vinculado ao Regime Geral de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1202 - Remuneração de Servidor vinculado ao Regime Próprio de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1210 - Pagamentos de Rendimentos do Trabalho",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2231 - Cessão/Exercício em Outro Órgão",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2230 - Afastamento Temporário",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2299 - Desligamento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2298 - Reintegração/Outros Provimentos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Fase IV - Implantação e Operação continua",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Capacitação",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar capacitação - eSocial",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Transmissão dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1200 - Remuneração de Trabalhador vinculado ao Regime Geral de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1202 - Remuneração de Servidor vinculado ao Regime Próprio de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1210 - Pagamentos de Rendimentos do Trabalho",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1010 - Tabela de Rubricas",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2200 - Cadastramento Inicial do Vínculo e Admissão/Ingresso de Trabalhador,",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2300 - Trabalhador Sem Vínculo de Emprego/Estatutário - Início",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2231 - Cessão/Exercício em Outro Órgão",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2230 - Afastamento Temporário",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2299 - Desligamento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2298 - Reintegração/Outros Provimentos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Quarta onda de Implantação ( Anexo - Tabela de Órgãos)",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Fase III - Parametrizações e Customizações",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Estruturação do Sincronismo Agnes Ledger para Transmissão de eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2200 - Cadastramento Inicial do Vínculo e Admissão/Ingresso de Trabalhador,",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2300 - Trabalhador Sem Vínculo de Emprego/Estatutário - Início",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1010 - Tabela de Rubricas",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1200 - Remuneração de Trabalhador vinculado ao Regime Geral de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1202 - Remuneração de Servidor vinculado ao Regime Próprio de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-1210 - Pagamentos de Rendimentos do Trabalho",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2231 - Cessão/Exercício em Outro Órgão",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2230 - Afastamento Temporário",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2299 - Desligamento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "S-2298 - Reintegração/Outros Provimentos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar testes de sincronismo do evento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Homologar fluxo de envio dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Fase IV - Implantação e Operação continua",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Capacitação",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Realizar capacitação - eSocial",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Transmissão dos eventos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1200 - Remuneração de Trabalhador vinculado ao Regime Geral de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1202 - Remuneração de Servidor vinculado ao Regime Próprio de Previd. Social",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1210 - Pagamentos de Rendimentos do Trabalho",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-1010 - Tabela de Rubricas",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2200 - Cadastramento Inicial do Vínculo e Admissão/Ingresso de Trabalhador,",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2300 - Trabalhador Sem Vínculo de Emprego/Estatutário - Início",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2231 - Cessão/Exercício em Outro Órgão",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2230 - Afastamento Temporário",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2299 - Desligamento",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      },
+      {
+        "tipo": "nova",
+        "tarefa": "Operacionalizar transmissão do evento S-2298 - Reintegração/Outros Provimentos",
+        "detalhe": "Tarefa adicionada (Não iniciada)"
+      }
+    ]
+  },
+  {
     "data": "17/04/2026 08:32",
     "pct_antes": 9.4,
     "pct_depois": 9.4,
