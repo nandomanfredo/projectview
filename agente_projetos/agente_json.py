@@ -5,8 +5,10 @@ from datetime import datetime
 from pathlib import Path
 
 ARQUIVO_MPP  = r"C:\Users\fernando.oliveira\OneDrive - AG CAPITAL\Documentos\Gestão de Projetos com IA\AIS 04 - Cronograma do Projeto de Implantação_Cliente_ São Paulo.mpp"
-ARQUIVO_JSON = Path("saopaulo.json")
-ARQUIVO_HIST = Path("historico.json")
+SCRIPT_DIR   = Path(__file__).parent        # agente_projetos/
+ROOT_DIR     = SCRIPT_DIR.parent            # projetos/ (raiz do repositório)
+ARQUIVO_JSON = ROOT_DIR / "saopaulo.json"
+ARQUIVO_HIST = ROOT_DIR / "historico.json"
 
 mpxj.startJVM()
 UniversalProjectReader = jpype.JClass("org.mpxj.reader.UniversalProjectReader")
